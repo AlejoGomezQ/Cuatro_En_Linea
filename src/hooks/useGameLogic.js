@@ -83,25 +83,35 @@ const useGameLogic = () => {
 
   const makeMove = useCallback(
     (col) => {
-      setBoard((prev) => {
-        const newBoard = [...prev];
-        const row = newBoard.findIndex((row) => row[col] === 0);
-        if (row === -1) return prev;
-
-        newBoard[row][col] = currentPlayer;
-        
-        // Verificar ganador después de actualizar el tablero
-        const result = checkWinner(newBoard);
-        if (result) {
-          setTimeout(() => setGameStatus("won"), 100);
-        } else {
-          setTimeout(() => setCurrentPlayer((prev) => (prev === 1 ? 2 : 1)), 100);
-        }
-        
-        return newBoard;
-      });
+      // Primero verificamos si la columna está llena
+      const columnIsFull = board.every(row => row[col] !== 0);
+      if (columnIsFull) return;
+      
+      // Encontramos la fila donde colocar la ficha (la más baja disponible)
+      const row = board.findIndex(row => row[col] === 0);
+      if (row === -1) return;
+      
+      // Creamos una copia profunda del tablero
+      const newBoard = board.map(row => [...row]);
+      
+      // Colocamos la ficha del jugador actual
+      newBoard[row][col] = currentPlayer;
+      
+      // Actualizamos el tablero
+      setBoard(newBoard);
+      
+      // Verificamos si hay un ganador
+      const result = checkWinner(newBoard);
+      
+      if (result) {
+        // Si hay un ganador, actualizamos el estado del juego
+        setGameStatus("won");
+      } else {
+        // Si no hay ganador, cambiamos al siguiente jugador
+        setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
+      }
     },
-    [currentPlayer]
+    [board, currentPlayer]
   );
 
   const resetGame = () => {
