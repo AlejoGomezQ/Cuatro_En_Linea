@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 const Cell = ({ player, isWinner, onClick, isInteractive }) => {
     const getCellStyle = () => {
         if (isWinner) return 'bg-gradient-to-br from-yellow-300 to-yellow-500 border-yellow-200';
-        if (player === 0) return 'bg-slate-700/80 border-slate-600/50 hover:border-slate-400/50'; // Celda vacía
+        if (player === 0) return 'bg-slate-700/80 border-slate-600/50 hover:border-slate-400/50';
         return player === 1 
             ? 'bg-gradient-to-br from-amber-400 to-red-600 border-amber-300/70' 
             : 'bg-gradient-to-br from-blue-400 to-indigo-600 border-blue-300/70';

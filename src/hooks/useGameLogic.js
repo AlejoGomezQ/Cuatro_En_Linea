@@ -9,14 +9,17 @@ const useGameLogic = () => {
   );
   const [activePlayer, setActivePlayer] = useState(1);
   const [gameStatus, setGameStatus] = useState("playing");
+  const [lastMove, setLastMove] = useState(null);
 
   const makeMove = useCallback(
     (selectedColumn) => {
       const isColumnFull = gameBoard.every(row => row[selectedColumn] !== 0);
       if (isColumnFull) return;
 
-      const targetRow = gameBoard.findIndex(row => row[selectedColumn] === 0);
-      if (targetRow === -1) return;
+      const emptyRows = gameBoard.map((row, index) => row[selectedColumn] === 0 ? index : -1).filter(index => index !== -1);
+      if (emptyRows.length === 0) return;
+      
+      const targetRow = Math.max(...emptyRows);
 
       const updatedBoard = gameBoard.map(row => [...row]);
       updatedBoard[targetRow][selectedColumn] = activePlayer;
@@ -24,6 +27,7 @@ const useGameLogic = () => {
       const winResult = checkWinner(updatedBoard, targetRow, selectedColumn);
 
       setGameBoard(updatedBoard);
+      setLastMove({ row: targetRow, col: selectedColumn });
       
       if (winResult) {
         setGameStatus("won");
@@ -42,9 +46,10 @@ const useGameLogic = () => {
     );
     setActivePlayer(1);
     setGameStatus("playing");
+    setLastMove(null);
   };
 
-  return { board: gameBoard, currentPlayer: activePlayer, gameStatus, makeMove, resetGame };
+  return { board: gameBoard, currentPlayer: activePlayer, gameStatus, makeMove, resetGame, lastMove };
 };
 
 export default useGameLogic;

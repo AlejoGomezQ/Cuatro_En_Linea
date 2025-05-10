@@ -14,67 +14,76 @@ const GameScreen = ({ gameMode }) => {
     }, [gameStatus]);
 
     const handleMove = (col) => {
+        if (gameStatus !== 'playing') return;
         makeMove(col);
         playMoveSound();
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-full w-full">
-            <PlayerBadge player={currentPlayer} />
-
-            <motion.div
+        <div className="flex flex-col items-center justify-center h-full w-full p-4">
+            <div className="flex justify-between items-center w-full max-w-md mb-4">
+                <PlayerBadge 
+                    player={1} 
+                    isActive={currentPlayer === 1 && gameStatus === 'playing'} 
+                />
+                <PlayerBadge 
+                    player={2} 
+                    isActive={currentPlayer === 2 && gameStatus === 'playing'} 
+                />
+            </div>
+            
+            <motion.div 
+                className="bg-slate-800/80 backdrop-blur-md rounded-xl p-4 shadow-xl border border-slate-700/50 w-full max-w-md"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="grid grid-cols-7 gap-x-6 gap-y-5 bg-slate-800/90 p-8 rounded-xl shadow-2xl border border-slate-700/50 backdrop-blur-sm"
-                style={{ minWidth: "350px", maxWidth: "90vw" }}
+                transition={{ duration: 0.5 }}
             >
-                {board.map((row, rowIndex) => (
-                    row.map((cell, colIndex) => (
-                        <Cell
-                            key={`${rowIndex}-${colIndex}`}
-                            player={cell}
-                            onClick={() => handleMove(colIndex)}
-                            isInteractive={gameStatus === 'playing'}
-                        />
-                    ))
-                ))}
-            </motion.div>
-
-            {gameStatus === 'won' ? (
-                <motion.div 
-                    className="mt-8 flex flex-col items-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.3 }}
-                >
+                {gameStatus === 'won' && (
                     <motion.div 
-                        className="text-xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-pink-500 px-8 py-3 rounded-full shadow-lg"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="bg-gradient-to-r from-amber-400 to-pink-500 text-white font-bold py-2 px-4 rounded-lg mb-4 text-center"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: 'spring' }}
                     >
-                        ¡Ganador: Jugador {board.flat().filter(cell => cell !== 0).pop()}!
+                        ¡Jugador {currentPlayer === 1 ? 2 : 1} ha ganado!
                     </motion.div>
+                )}
+                
+                <div className="grid grid-cols-7 gap-1 md:gap-2 bg-slate-900/80 p-2 md:p-3 rounded-lg relative">
+                    {board.map((row, rowIndex) => (
+                        row.map((cell, colIndex) => (
+                            <Cell
+                                key={`${rowIndex}-${colIndex}`}
+                                player={cell}
+                                onClick={() => handleMove(colIndex)}
+                                isInteractive={gameStatus === 'playing'}
+                            />
+                        ))
+                    ))}
+                </div>
+                
+                {gameStatus === 'won' && (
                     <motion.button
+                        className="mt-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-emerald-300/30 font-bold tracking-wide w-full"
                         onClick={resetGame}
-                        className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-10 py-4 rounded-lg shadow-lg border-2 border-emerald-300/30 font-bold tracking-wide"
-                        whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         Jugar de nuevo
                     </motion.button>
-                </motion.div>
-            ) : (
-                <div className="h-28 flex items-center justify-center">
+                )}
+                
+                {gameStatus === 'playing' && (
                     <motion.div 
-                        className="text-white/90 text-base mt-6 bg-white/10 px-6 py-3 rounded-lg border border-white/20 shadow-lg"
+                        className="mt-4 text-white/80 text-center text-sm bg-white/10 py-2 px-4 rounded-lg"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.5 }}
                     >
                         Selecciona una columna para colocar tu ficha
                     </motion.div>
-                </div>
-            )}
+                )}
+            </motion.div>
         </div>
     );
 };
