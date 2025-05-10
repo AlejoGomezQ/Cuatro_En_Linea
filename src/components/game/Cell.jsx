@@ -18,7 +18,7 @@ const Cell = ({ player, isWinner, onClick, isInteractive }) => {
         <motion.button
             onClick={onClick}
             disabled={!isInteractive || player !== 0}
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-full ${getCellStyle()} 
+            className={`w-9 h-9 md:w-11 md:h-11 rounded-full ${getCellStyle()} 
                 ${isInteractive && player === 0 ? 'cursor-pointer' : ''} 
                 shadow-lg border-2 relative overflow-hidden`}
             initial={{ scale: 0 }}
