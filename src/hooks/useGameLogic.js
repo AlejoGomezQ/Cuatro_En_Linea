@@ -3,69 +3,81 @@ import { useState, useCallback } from "react";
 const BOARD_COLS = 7;
 const BOARD_ROWS = 6;
 
-const checkWinner = (board) => {
-  // Verificar horizontal
-  for (let row = 0; row < BOARD_ROWS; row++) {
-    for (let col = 0; col <= BOARD_COLS - 4; col++) {
-      const player = board[row][col];
-      if (player !== 0 && 
-          player === board[row][col + 1] && 
-          player === board[row][col + 2] && 
-          player === board[row][col + 3]) {
-        return { 
-          winner: player, 
-          cells: [[row, col], [row, col + 1], [row, col + 2], [row, col + 3]] 
-        };
-      }
+// Función optimizada para verificar ganador con complejidad O(1)
+// Solo verifica las líneas que pasan por la última ficha colocada
+const checkWinner = (board, lastRow, lastCol) => {
+  // Si no se proporciona la última posición, no hay nada que verificar
+  if (lastRow === undefined || lastCol === undefined) return null;
+  
+  const player = board[lastRow][lastCol];
+  if (player === 0) return null; // Si la celda está vacía, no hay ganador
+
+  // Verificar horizontal (izquierda a derecha)
+  let count = 0;
+  let cells = [];
+  for (let c = Math.max(0, lastCol - 3); c <= Math.min(BOARD_COLS - 1, lastCol + 3); c++) {
+    if (board[lastRow][c] === player) {
+      count++;
+      cells.push([lastRow, c]);
+      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
+    } else {
+      count = 0;
+      cells = [];
     }
   }
 
-  // Verificar vertical
-  for (let row = 0; row <= BOARD_ROWS - 4; row++) {
-    for (let col = 0; col < BOARD_COLS; col++) {
-      const player = board[row][col];
-      if (player !== 0 && 
-          player === board[row + 1][col] && 
-          player === board[row + 2][col] && 
-          player === board[row + 3][col]) {
-        return { 
-          winner: player, 
-          cells: [[row, col], [row + 1, col], [row + 2, col], [row + 3, col]] 
-        };
-      }
+  // Verificar vertical (abajo a arriba)
+  count = 0;
+  cells = [];
+  for (let r = Math.max(0, lastRow - 3); r <= Math.min(BOARD_ROWS - 1, lastRow + 3); r++) {
+    if (board[r][lastCol] === player) {
+      count++;
+      cells.push([r, lastCol]);
+      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
+    } else {
+      count = 0;
+      cells = [];
     }
   }
 
-  // Verificar diagonal (abajo-derecha)
-  for (let row = 0; row <= BOARD_ROWS - 4; row++) {
-    for (let col = 0; col <= BOARD_COLS - 4; col++) {
-      const player = board[row][col];
-      if (player !== 0 && 
-          player === board[row + 1][col + 1] && 
-          player === board[row + 2][col + 2] && 
-          player === board[row + 3][col + 3]) {
-        return { 
-          winner: player, 
-          cells: [[row, col], [row + 1, col + 1], [row + 2, col + 2], [row + 3, col + 3]] 
-        };
-      }
+  // Verificar diagonal principal (\)
+  count = 0;
+  cells = [];
+  // Encontrar el punto más arriba a la izquierda de la diagonal que pasa por (lastRow, lastCol)
+  let r = lastRow - Math.min(lastRow, lastCol);
+  let c = lastCol - Math.min(lastRow, lastCol);
+  // Recorrer la diagonal
+  while (r < BOARD_ROWS && c < BOARD_COLS) {
+    if (board[r][c] === player) {
+      count++;
+      cells.push([r, c]);
+      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
+    } else {
+      count = 0;
+      cells = [];
     }
+    r++;
+    c++;
   }
 
-  // Verificar diagonal (arriba-derecha)
-  for (let row = 3; row < BOARD_ROWS; row++) {
-    for (let col = 0; col <= BOARD_COLS - 4; col++) {
-      const player = board[row][col];
-      if (player !== 0 && 
-          player === board[row - 1][col + 1] && 
-          player === board[row - 2][col + 2] && 
-          player === board[row - 3][col + 3]) {
-        return { 
-          winner: player, 
-          cells: [[row, col], [row - 1, col + 1], [row - 2, col + 2], [row - 3, col + 3]] 
-        };
-      }
+  // Verificar diagonal secundaria (/)
+  count = 0;
+  cells = [];
+  // Encontrar el punto más abajo a la izquierda de la diagonal que pasa por (lastRow, lastCol)
+  r = lastRow + Math.min(BOARD_ROWS - 1 - lastRow, lastCol);
+  c = lastCol - Math.min(BOARD_ROWS - 1 - lastRow, lastCol);
+  // Recorrer la diagonal
+  while (r >= 0 && c < BOARD_COLS) {
+    if (board[r][c] === player) {
+      count++;
+      cells.push([r, c]);
+      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
+    } else {
+      count = 0;
+      cells = [];
     }
+    r--;
+    c++;
   }
 
   // No hay ganador
@@ -100,8 +112,8 @@ const useGameLogic = () => {
       // Actualizamos el tablero
       setBoard(newBoard);
       
-      // Verificamos si hay un ganador
-      const result = checkWinner(newBoard);
+      // Verificamos si hay un ganador usando la última posición colocada
+      const result = checkWinner(newBoard, row, col);
       
       if (result) {
         // Si hay un ganador, actualizamos el estado del juego
