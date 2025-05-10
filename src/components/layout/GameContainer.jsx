@@ -1,14 +1,10 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import GameScreen from '../../screens/Game';
 import GameModesScreen from '../../screens/GameModes';
+import { useGame } from '../../context/GameContext';
 
 const GameContainer = () => {
-  const [gameMode, setGameMode] = useState(null);
-  
-  const handleSelectMode = (mode) => {
-    setGameMode(mode);
-  };
+  const { gameMode, handleSelectMode } = useGame();
   
   return (
     <>
@@ -26,7 +22,7 @@ const GameContainer = () => {
           <GameModesScreen onSelectMode={handleSelectMode} />
         ) : (
           <div className="w-full">
-            <GameScreen gameMode={gameMode} />
+            <GameScreen />
           </div>
         )}
       </div>
