@@ -1,142 +1,49 @@
 import { useState, useCallback } from "react";
-
-const BOARD_COLS = 7;
-const BOARD_ROWS = 6;
-
-// Función optimizada para verificar ganador con complejidad O(1)
-// Solo verifica las líneas que pasan por la última ficha colocada
-const checkWinner = (board, lastRow, lastCol) => {
-  // Si no se proporciona la última posición, no hay nada que verificar
-  if (lastRow === undefined || lastCol === undefined) return null;
-  
-  const player = board[lastRow][lastCol];
-  if (player === 0) return null; // Si la celda está vacía, no hay ganador
-
-  // Verificar horizontal (izquierda a derecha)
-  let count = 0;
-  let cells = [];
-  for (let c = Math.max(0, lastCol - 3); c <= Math.min(BOARD_COLS - 1, lastCol + 3); c++) {
-    if (board[lastRow][c] === player) {
-      count++;
-      cells.push([lastRow, c]);
-      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
-    } else {
-      count = 0;
-      cells = [];
-    }
-  }
-
-  // Verificar vertical (abajo a arriba)
-  count = 0;
-  cells = [];
-  for (let r = Math.max(0, lastRow - 3); r <= Math.min(BOARD_ROWS - 1, lastRow + 3); r++) {
-    if (board[r][lastCol] === player) {
-      count++;
-      cells.push([r, lastCol]);
-      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
-    } else {
-      count = 0;
-      cells = [];
-    }
-  }
-
-  // Verificar diagonal principal (\)
-  count = 0;
-  cells = [];
-  // Encontrar el punto más arriba a la izquierda de la diagonal que pasa por (lastRow, lastCol)
-  let r = lastRow - Math.min(lastRow, lastCol);
-  let c = lastCol - Math.min(lastRow, lastCol);
-  // Recorrer la diagonal
-  while (r < BOARD_ROWS && c < BOARD_COLS) {
-    if (board[r][c] === player) {
-      count++;
-      cells.push([r, c]);
-      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
-    } else {
-      count = 0;
-      cells = [];
-    }
-    r++;
-    c++;
-  }
-
-  // Verificar diagonal secundaria (/)
-  count = 0;
-  cells = [];
-  // Encontrar el punto más abajo a la izquierda de la diagonal que pasa por (lastRow, lastCol)
-  r = lastRow + Math.min(BOARD_ROWS - 1 - lastRow, lastCol);
-  c = lastCol - Math.min(BOARD_ROWS - 1 - lastRow, lastCol);
-  // Recorrer la diagonal
-  while (r >= 0 && c < BOARD_COLS) {
-    if (board[r][c] === player) {
-      count++;
-      cells.push([r, c]);
-      if (count >= 4) return { winner: player, cells: cells.slice(-4) };
-    } else {
-      count = 0;
-      cells = [];
-    }
-    r--;
-    c++;
-  }
-
-  // No hay ganador
-  return null;
-};
+import { BOARD_COLUMNS, BOARD_ROWS, checkWinner } from "../utils/gameUtils";
 
 const useGameLogic = () => {
-  const [board, setBoard] = useState(
+  const [gameBoard, setGameBoard] = useState(
     Array(BOARD_ROWS)
       .fill()
-      .map(() => Array(BOARD_COLS).fill(0))
+      .map(() => Array(BOARD_COLUMNS).fill(0))
   );
-  const [currentPlayer, setCurrentPlayer] = useState(1);
+  const [activePlayer, setActivePlayer] = useState(1);
   const [gameStatus, setGameStatus] = useState("playing");
 
   const makeMove = useCallback(
-    (col) => {
-      // Primero verificamos si la columna está llena
-      const columnIsFull = board.every(row => row[col] !== 0);
-      if (columnIsFull) return;
+    (selectedColumn) => {
+      const isColumnFull = gameBoard.every(boardRow => boardRow[selectedColumn] !== 0);
+      if (isColumnFull) return;
       
-      // Encontramos la fila donde colocar la ficha (la más baja disponible)
-      const row = board.findIndex(row => row[col] === 0);
-      if (row === -1) return;
+      const targetRow = gameBoard.findIndex(boardRow => boardRow[selectedColumn] === 0);
+      if (targetRow === -1) return;
       
-      // Creamos una copia profunda del tablero
-      const newBoard = board.map(row => [...row]);
+      const updatedBoard = gameBoard.map(boardRow => [...boardRow]);
+      updatedBoard[targetRow][selectedColumn] = activePlayer;
+      setGameBoard(updatedBoard);
       
-      // Colocamos la ficha del jugador actual
-      newBoard[row][col] = currentPlayer;
+      const winResult = checkWinner(updatedBoard, targetRow, selectedColumn);
       
-      // Actualizamos el tablero
-      setBoard(newBoard);
-      
-      // Verificamos si hay un ganador usando la última posición colocada
-      const result = checkWinner(newBoard, row, col);
-      
-      if (result) {
-        // Si hay un ganador, actualizamos el estado del juego
+      if (winResult) {
         setGameStatus("won");
       } else {
-        // Si no hay ganador, cambiamos al siguiente jugador
-        setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
+        setActivePlayer(activePlayer === 1 ? 2 : 1);
       }
     },
-    [board, currentPlayer]
+    [gameBoard, activePlayer]
   );
 
   const resetGame = () => {
-    setBoard(
+    setGameBoard(
       Array(BOARD_ROWS)
         .fill()
-        .map(() => Array(BOARD_COLS).fill(0))
+        .map(() => Array(BOARD_COLUMNS).fill(0))
     );
-    setCurrentPlayer(1);
+    setActivePlayer(1);
     setGameStatus("playing");
   };
 
-  return { board, currentPlayer, gameStatus, makeMove, resetGame };
+  return { board: gameBoard, currentPlayer: activePlayer, gameStatus, makeMove, resetGame };
 };
 
 export default useGameLogic;
