@@ -7,7 +7,6 @@ const checkWinner = (gameBoard, lastPlayedRow, lastPlayedColumn) => {
   const currentPlayer = gameBoard[lastPlayedRow][lastPlayedColumn];
   if (currentPlayer === 0) return null;
 
-  // Verificación horizontal
   let consecutiveCount = 0;
   let winningCells = [];
   for (let column = Math.max(0, lastPlayedColumn - 3); column <= Math.min(BOARD_COLUMNS - 1, lastPlayedColumn + 3); column++) {
@@ -21,7 +20,6 @@ const checkWinner = (gameBoard, lastPlayedRow, lastPlayedColumn) => {
     }
   }
 
-  // Verificación vertical
   consecutiveCount = 0;
   winningCells = [];
   for (let row = Math.max(0, lastPlayedRow - 3); row <= Math.min(BOARD_ROWS - 1, lastPlayedRow + 3); row++) {
@@ -35,7 +33,6 @@ const checkWinner = (gameBoard, lastPlayedRow, lastPlayedColumn) => {
     }
   }
 
-  // Verificación diagonal principal (\)
   consecutiveCount = 0;
   winningCells = [];
   let startRow = lastPlayedRow - Math.min(lastPlayedRow, lastPlayedColumn);
@@ -53,7 +50,6 @@ const checkWinner = (gameBoard, lastPlayedRow, lastPlayedColumn) => {
     startColumn++;
   }
 
-  // Verificación diagonal secundaria (/)
   consecutiveCount = 0;
   winningCells = [];
   startRow = lastPlayedRow + Math.min(BOARD_ROWS - 1 - lastPlayedRow, lastPlayedColumn);

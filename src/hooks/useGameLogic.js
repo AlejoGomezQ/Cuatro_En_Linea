@@ -12,25 +12,30 @@ const useGameLogic = () => {
 
   const makeMove = useCallback(
     (selectedColumn) => {
-      const isColumnFull = gameBoard.every(boardRow => boardRow[selectedColumn] !== 0);
-      if (isColumnFull) return;
-      
-      const targetRow = gameBoard.findIndex(boardRow => boardRow[selectedColumn] === 0);
-      if (targetRow === -1) return;
-      
-      const updatedBoard = gameBoard.map(boardRow => [...boardRow]);
-      updatedBoard[targetRow][selectedColumn] = activePlayer;
-      setGameBoard(updatedBoard);
-      
-      const winResult = checkWinner(updatedBoard, targetRow, selectedColumn);
-      
-      if (winResult) {
-        setGameStatus("won");
-      } else {
-        setActivePlayer(activePlayer === 1 ? 2 : 1);
-      }
+      setGameBoard(prevBoard => {
+        const isColumnFull = prevBoard.every(boardRow => boardRow[selectedColumn] !== 0);
+        if (isColumnFull) return prevBoard;
+        
+        const targetRow = prevBoard.findIndex(boardRow => boardRow[selectedColumn] === 0);
+        if (targetRow === -1) return prevBoard;
+        
+        const updatedBoard = prevBoard.map(boardRow => [...boardRow]);
+        updatedBoard[targetRow][selectedColumn] = activePlayer;
+        
+        const winResult = checkWinner(updatedBoard, targetRow, selectedColumn);
+        
+        setTimeout(() => {
+          if (winResult) {
+            setGameStatus("won");
+          } else {
+            setActivePlayer(prevPlayer => prevPlayer === 1 ? 2 : 1);
+          }
+        }, 0);
+        
+        return updatedBoard;
+      });
     },
-    [gameBoard, activePlayer]
+    [activePlayer]
   );
 
   const resetGame = () => {
