@@ -34,7 +34,7 @@ const GameScreen = () => {
                 transition={{ duration: 0.5 }}
             >
                 {gameStatus === 'won' && (
-                    <WinnerMessage player={currentPlayer === 1 ? 2 : 1} />
+                    <WinnerMessage />
                 )}
                 
                 <div className="grid grid-cols-7 gap-1 md:gap-2 bg-slate-900/80 p-2 md:p-3 rounded-lg relative">
