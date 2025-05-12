@@ -1,6 +1,5 @@
 import { BOARD_COLUMNS, BOARD_ROWS, checkWinner } from './gameUtils';
 
-// Función para obtener las columnas disponibles (no llenas)
 const getAvailableColumns = (board) => {
   const availableColumns = [];
   for (let col = 0; col < BOARD_COLUMNS; col++) {
@@ -11,11 +10,9 @@ const getAvailableColumns = (board) => {
   return availableColumns;
 };
 
-// Función para simular un movimiento en una columna
 const simulateMove = (board, column, player) => {
   const newBoard = board.map(row => [...row]);
   
-  // Encontrar la fila donde caerá la ficha
   const emptyRows = newBoard.map((row, index) => row[column] === 0 ? index : -1).filter(index => index !== -1);
   if (emptyRows.length === 0) return null;
   
@@ -25,68 +22,56 @@ const simulateMove = (board, column, player) => {
   return { board: newBoard, row: targetRow, col: column };
 };
 
-// Función para evaluar el tablero (usado en dificultad media y difícil)
 const evaluateBoard = (board, player) => {
   let score = 0;
   
-  // Valorar el centro (estratégicamente valioso)
   const centerColumn = Math.floor(BOARD_COLUMNS / 2);
   const centerCount = board.filter(row => row[centerColumn] === player).length;
   score += centerCount * 3;
   
-  // Buscar posibles líneas de 2 y 3 fichas
-  // Horizontal
-  for (let row = 0; row < BOARD_ROWS; row++) {
-    for (let col = 0; col < BOARD_COLUMNS - 3; col++) {
-      const window = [board[row][col], board[row][col+1], board[row][col+2], board[row][col+3]];
-      score += evaluateWindow(window, player);
-    }
-  }
+  const windowPatterns = [];
   
-  // Vertical
-  for (let col = 0; col < BOARD_COLUMNS; col++) {
-    for (let row = 0; row < BOARD_ROWS - 3; row++) {
-      const window = [board[row][col], board[row+1][col], board[row+2][col], board[row+3][col]];
-      score += evaluateWindow(window, player);
-    }
-  }
+  board.forEach((row, rowIndex) => {
+    row.forEach((_, colIndex) => {
+      if (colIndex <= BOARD_COLUMNS - 4) {
+        windowPatterns.push([row[colIndex], row[colIndex+1], row[colIndex+2], row[colIndex+3]]);
+      }
+      
+      if (rowIndex <= BOARD_ROWS - 4) {
+        if (colIndex <= BOARD_COLUMNS - 4) {
+          windowPatterns.push([board[rowIndex][colIndex], board[rowIndex+1][colIndex+1], board[rowIndex+2][colIndex+2], board[rowIndex+3][colIndex+3]]);
+        }
+        
+        windowPatterns.push([board[rowIndex][colIndex], board[rowIndex+1][colIndex], board[rowIndex+2][colIndex], board[rowIndex+3][colIndex]]);
+        
+        if (colIndex >= 3) {
+          windowPatterns.push([board[rowIndex][colIndex], board[rowIndex+1][colIndex-1], board[rowIndex+2][colIndex-2], board[rowIndex+3][colIndex-3]]);
+        }
+      }
+    });
+  });
   
-  // Diagonal ascendente
-  for (let row = 3; row < BOARD_ROWS; row++) {
-    for (let col = 0; col < BOARD_COLUMNS - 3; col++) {
-      const window = [board[row][col], board[row-1][col+1], board[row-2][col+2], board[row-3][col+3]];
-      score += evaluateWindow(window, player);
-    }
-  }
-  
-  // Diagonal descendente
-  for (let row = 0; row < BOARD_ROWS - 3; row++) {
-    for (let col = 0; col < BOARD_COLUMNS - 3; col++) {
-      const window = [board[row][col], board[row+1][col+1], board[row+2][col+2], board[row+3][col+3]];
-      score += evaluateWindow(window, player);
-    }
-  }
+  windowPatterns.forEach(window => {
+    score += evaluateWindow(window, player);
+  });
   
   return score;
 };
 
-// Función auxiliar para evaluar una ventana de 4 posiciones
 const evaluateWindow = (window, player) => {
   const opponent = player === 1 ? 2 : 1;
   const playerCount = window.filter(cell => cell === player).length;
   const emptyCount = window.filter(cell => cell === 0).length;
   const opponentCount = window.filter(cell => cell === opponent).length;
   
-  // Puntajes para diferentes configuraciones
   if (playerCount === 4) return 100;
   if (playerCount === 3 && emptyCount === 1) return 5;
   if (playerCount === 2 && emptyCount === 2) return 2;
-  if (opponentCount === 3 && emptyCount === 1) return -4; // Bloquear al oponente
+  if (opponentCount === 3 && emptyCount === 1) return -4;
   
   return 0;
 };
 
-// Función para verificar si un movimiento es ganador
 const isWinningMove = (board, column, player) => {
   const moveResult = simulateMove(board, column, player);
   if (!moveResult) return false;
@@ -95,128 +80,85 @@ const isWinningMove = (board, column, player) => {
   return !!winResult;
 };
 
-// Implementación del nivel fácil: movimientos principalmente aleatorios
 const getEasyMove = (board) => {
   const availableColumns = getAvailableColumns(board);
   if (availableColumns.length === 0) return null;
   
-  // 20% de probabilidad de bloquear jugadas ganadoras obvias
-  const opponent = 1; // La IA siempre es el jugador 2
+  const opponent = 1;
   
   if (Math.random() < 0.2) {
-    for (const column of availableColumns) {
-      if (isWinningMove(board, column, opponent)) {
-        return column;
-      }
-    }
+    const blockingMove = availableColumns.find(column => isWinningMove(board, column, opponent));
+    if (blockingMove !== undefined) return blockingMove;
   }
   
-  // Movimiento aleatorio
   return availableColumns[Math.floor(Math.random() * availableColumns.length)];
 };
 
-// Implementación del nivel intermedio: bloquea jugadas y busca oportunidades
 const getMediumMove = (board) => {
   const availableColumns = getAvailableColumns(board);
   if (availableColumns.length === 0) return null;
   
-  const player = 2; // La IA
-  const opponent = 1; // El jugador humano
+  const player = 2;
+  const opponent = 1;
   
-  // Primero busca si puede ganar en el próximo movimiento
-  for (const column of availableColumns) {
-    if (isWinningMove(board, column, player)) {
-      return column;
-    }
-  }
+  const winningMove = availableColumns.find(column => isWinningMove(board, column, player));
+  if (winningMove !== undefined) return winningMove;
   
-  // Luego busca si necesita bloquear al oponente (80% de probabilidad)
   if (Math.random() < 0.8) {
-    for (const column of availableColumns) {
-      if (isWinningMove(board, column, opponent)) {
-        return column;
-      }
-    }
+    const blockingMove = availableColumns.find(column => isWinningMove(board, column, opponent));
+    if (blockingMove !== undefined) return blockingMove;
   }
   
-  // Si no hay jugadas ganadoras o bloqueantes, evalúa cada columna
-  let bestScore = -Infinity;
-  let bestColumn = availableColumns[0];
-  
-  for (const column of availableColumns) {
+  const columnScores = availableColumns.map(column => {
     const moveResult = simulateMove(board, column, player);
-    if (!moveResult) continue;
-    
-    const score = evaluateBoard(moveResult.board, player);
-    if (score > bestScore) {
-      bestScore = score;
-      bestColumn = column;
-    }
-  }
+    if (!moveResult) return { column, score: -Infinity };
+    return { column, score: evaluateBoard(moveResult.board, player) };
+  });
   
-  return bestColumn;
+  columnScores.sort((a, b) => b.score - a.score);
+  return columnScores[0].column;
 };
 
-// Implementación del nivel difícil: usa minimax con profundidad limitada
 const getHardMove = (board) => {
   const availableColumns = getAvailableColumns(board);
   if (availableColumns.length === 0) return null;
   
-  const player = 2; // La IA
-  const opponent = 1; // El jugador humano
+  const player = 2;
+  const opponent = 1;
   
-  // Primero busca si puede ganar en el próximo movimiento
-  for (const column of availableColumns) {
-    if (isWinningMove(board, column, player)) {
-      return column;
-    }
-  }
+  const winningMove = availableColumns.find(column => isWinningMove(board, column, player));
+  if (winningMove !== undefined) return winningMove;
   
-  // Luego busca si necesita bloquear al oponente
-  for (const column of availableColumns) {
-    if (isWinningMove(board, column, opponent)) {
-      return column;
-    }
-  }
+  const blockingMove = availableColumns.find(column => isWinningMove(board, column, opponent));
+  if (blockingMove !== undefined) return blockingMove;
   
-  // Si no hay jugadas ganadoras o bloqueantes, usa minimax
-  let bestScore = -Infinity;
-  let bestColumn = availableColumns[0];
-  const depth = 3; // Profundidad de búsqueda
+  const depth = 3;
   
-  for (const column of availableColumns) {
+  const columnScores = availableColumns.map(column => {
     const moveResult = simulateMove(board, column, player);
-    if (!moveResult) continue;
-    
-    const score = minimax(moveResult.board, depth - 1, -Infinity, Infinity, false);
-    if (score > bestScore) {
-      bestScore = score;
-      bestColumn = column;
-    }
-  }
+    if (!moveResult) return { column, score: -Infinity };
+    return { column, score: minimax(moveResult.board, depth - 1, -Infinity, Infinity, false) };
+  });
   
-  return bestColumn;
+  columnScores.sort((a, b) => b.score - a.score);
+  return columnScores[0].column;
 };
 
-// Algoritmo minimax con poda alfa-beta
 const minimax = (board, depth, alpha, beta, isMaximizing) => {
   const availableColumns = getAvailableColumns(board);
   
-  // Casos base
   if (depth === 0) {
-    return evaluateBoard(board, 2); // Evaluar desde perspectiva de la IA
+    return evaluateBoard(board, 2);
   }
   
   if (availableColumns.length === 0) {
-    return 0; // Empate
+    return 0;
   }
   
-  // Verificar si hay un ganador
-  for (const column of availableColumns) {
-    const player = isMaximizing ? 2 : 1;
-    if (isWinningMove(board, column, player)) {
-      return isMaximizing ? 1000 : -1000;
-    }
+  const player = isMaximizing ? 2 : 1;
+  const winningColumn = availableColumns.find(column => isWinningMove(board, column, player));
+  if (winningColumn !== undefined) {
+    return isMaximizing ? 1000 : -1000;
   }
   
   if (isMaximizing) {
@@ -228,7 +170,7 @@ const minimax = (board, depth, alpha, beta, isMaximizing) => {
       const evaluation = minimax(moveResult.board, depth - 1, alpha, beta, false);
       maxEval = Math.max(maxEval, evaluation);
       alpha = Math.max(alpha, evaluation);
-      if (beta <= alpha) break; // Poda alfa-beta
+      if (beta <= alpha) break;
     }
     return maxEval;
   } else {
@@ -240,13 +182,12 @@ const minimax = (board, depth, alpha, beta, isMaximizing) => {
       const evaluation = minimax(moveResult.board, depth - 1, alpha, beta, true);
       minEval = Math.min(minEval, evaluation);
       beta = Math.min(beta, evaluation);
-      if (beta <= alpha) break; // Poda alfa-beta
+      if (beta <= alpha) break;
     }
     return minEval;
   }
 };
 
-// Función principal que devuelve el movimiento según la dificultad
 const getAIMove = (board, difficulty) => {
   switch (difficulty) {
     case 'easy':
