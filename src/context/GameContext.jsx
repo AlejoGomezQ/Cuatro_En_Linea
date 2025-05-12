@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { BOARD_COLUMNS, BOARD_ROWS, checkWinner } from '../utils/gameUtils';
+import { getAIMove } from '../utils/aiUtils';
 import useGameSounds from '../hooks/useGameSounds';
 
 const GameContext = createContext();
@@ -16,10 +17,19 @@ export const GameProvider = ({ children }) => {
   const [gameStatus, setGameStatus] = useState('playing');
   const [lastMove, setLastMove] = useState(null);
   const [gameMode, setGameMode] = useState(null);
+  const [aiDifficulty, setAiDifficulty] = useState(null);
+  const [isAiThinking, setIsAiThinking] = useState(false);
   const { playMoveSound, playWinSound } = useGameSounds();
 
   const handleSelectMode = useCallback((mode) => {
     setGameMode(mode);
+    if (mode !== 'ai') {
+      setAiDifficulty(null);
+    }
+  }, []);
+
+  const handleSelectDifficulty = useCallback((difficulty) => {
+    setAiDifficulty(difficulty);
   }, []);
 
   const makeMove = useCallback(
@@ -58,7 +68,44 @@ export const GameProvider = ({ children }) => {
     setActivePlayer(1);
     setGameStatus('playing');
     setLastMove(null);
+    setIsAiThinking(false);
   }, []);
+
+  // Efecto para manejar el turno de la IA
+  useEffect(() => {
+    if (gameMode === 'ai' && aiDifficulty && activePlayer === 2 && gameStatus === 'playing') {
+      setIsAiThinking(true);
+      
+      // Calculamos el tiempo de "pensamiento" según la dificultad
+      // Más difícil = más tiempo "pensando" (para simular que está calculando)
+      let thinkingTime;
+      switch (aiDifficulty) {
+        case 'easy':
+          thinkingTime = Math.random() * 200 + 200; // 200-400ms
+          break;
+        case 'medium':
+          thinkingTime = Math.random() * 300 + 300; // 300-600ms
+          break;
+        case 'hard':
+          thinkingTime = Math.random() * 400 + 400; // 400-800ms
+          break;
+        default:
+          thinkingTime = Math.random() * 300 + 200; // 200-500ms
+      }
+      
+      const aiTimeout = setTimeout(() => {
+        // Obtener el movimiento de la IA según la dificultad
+        const aiColumn = getAIMove(gameBoard, aiDifficulty);
+        
+        if (aiColumn !== null) {
+          makeMove(aiColumn);
+        }
+        setIsAiThinking(false);
+      }, thinkingTime);
+      
+      return () => clearTimeout(aiTimeout);
+    }
+  }, [activePlayer, gameMode, aiDifficulty, gameStatus, gameBoard, makeMove]);
 
   const value = {
     board: gameBoard,
@@ -66,9 +113,12 @@ export const GameProvider = ({ children }) => {
     gameStatus,
     lastMove,
     gameMode,
+    aiDifficulty,
+    isAiThinking,
     makeMove,
     resetGame,
-    handleSelectMode
+    handleSelectMode,
+    handleSelectDifficulty
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

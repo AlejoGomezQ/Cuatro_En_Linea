@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import GameScreen from '../../screens/Game';
 import GameModesScreen from '../../screens/GameModes';
+import DifficultySelector from '../game/DifficultySelector';
 import { useGame } from '../../context/GameContext';
 
 const GameContainer = () => {
-  const { gameMode, handleSelectMode } = useGame();
+  const { gameMode, aiDifficulty, handleSelectMode, handleSelectDifficulty } = useGame();
   
   return (
     <>
@@ -20,6 +21,8 @@ const GameContainer = () => {
       <div className="flex-1 flex items-center justify-center w-full">
         {!gameMode ? (
           <GameModesScreen onSelectMode={handleSelectMode} />
+        ) : gameMode === 'ai' && !aiDifficulty ? (
+          <DifficultySelector onSelectDifficulty={handleSelectDifficulty} />
         ) : (
           <div className="w-full">
             <GameScreen />
