@@ -71,13 +71,12 @@ export const GameProvider = ({ children }) => {
     setIsAiThinking(false);
   }, []);
 
-  // Efecto para manejar el turno de la IA
+
   useEffect(() => {
     if (gameMode === 'ai' && aiDifficulty && activePlayer === 2 && gameStatus === 'playing') {
       setIsAiThinking(true);
       
-      // Calculamos el tiempo de "pensamiento" según la dificultad
-      // Más difícil = más tiempo "pensando" (para simular que está calculando)
+
       let thinkingTime;
       switch (aiDifficulty) {
         case 'easy':
@@ -94,7 +93,7 @@ export const GameProvider = ({ children }) => {
       }
       
       const aiTimeout = setTimeout(() => {
-        // Obtener el movimiento de la IA según la dificultad
+
         const aiColumn = getAIMove(gameBoard, aiDifficulty);
         
         if (aiColumn !== null) {

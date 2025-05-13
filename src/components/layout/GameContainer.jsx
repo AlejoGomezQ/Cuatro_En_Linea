@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import GameScreen from '../../screens/Game';
 import GameModesScreen from '../../screens/GameModes';
 import DifficultySelector from '../game/DifficultySelector';
-import Header from './Header';
+import AppLayout from './AppLayout';
 import { useGame } from '../../context/GameContext';
 
 const GameContainer = () => {
@@ -10,7 +10,7 @@ const GameContainer = () => {
   
   return (
     <>
-      <Header />
+      <AppLayout />
       
       <div className="flex-1 flex items-center justify-center w-full pb-20">
         {!gameMode ? (
