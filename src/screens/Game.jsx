@@ -16,7 +16,7 @@ const GameScreen = () => {
 
     return (
         <div className="flex flex-col items-center justify-center h-full w-full p-4">
-            <div className="flex justify-between items-center w-full max-w-md mb-4">
+            <div className="flex justify-between items-center w-full max-w-md mb-8">
                 <PlayerBadge 
                     player={1} 
                     isActive={currentPlayer === 1 && gameStatus === 'playing'} 
@@ -51,19 +51,29 @@ const GameScreen = () => {
                 </div>
                 
                 {gameStatus === 'won' && (
-                    <div className="mt-4">
+                    <motion.div 
+                        className="mt-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                    >
                         <Button onClick={resetGame} fullWidth={true}>
                             Jugar de nuevo
                         </Button>
-                    </div>
+                    </motion.div>
                 )}
                 
                 {gameStatus === 'playing' && (
-                    <div className="mt-4">
+                    <motion.div 
+                        className="mt-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
                         <InfoMessage>
                             Selecciona una columna para colocar tu ficha
                         </InfoMessage>
-                    </div>
+                    </motion.div>
                 )}
             </motion.div>
         </div>

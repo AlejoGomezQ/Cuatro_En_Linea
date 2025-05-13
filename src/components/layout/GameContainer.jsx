@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import GameScreen from '../../screens/Game';
 import GameModesScreen from '../../screens/GameModes';
 import DifficultySelector from '../game/DifficultySelector';
+import AppLayout from './AppLayout';
 import { useGame } from '../../context/GameContext';
 
 const GameContainer = () => {
@@ -9,16 +10,9 @@ const GameContainer = () => {
   
   return (
     <>
-      <motion.h1 
-        className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 mt-4 text-center"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        Konect4
-      </motion.h1>
+      <AppLayout />
       
-      <div className="flex-1 flex items-center justify-center w-full">
+      <div className="flex-1 flex items-center justify-center w-full pb-20">
         {!gameMode ? (
           <GameModesScreen onSelectMode={handleSelectMode} />
         ) : gameMode === 'ai' && !aiDifficulty ? (
