@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useGame } from '../../context/GameContext';
 import AppHeader from './AppHeader';
 import NavigationBar from './NavigationBar';
 import MenuDrawer from './MenuDrawer';
+import GameScreen from '../../screens/Game';
+import GameModesScreen from '../../screens/GameModes';
+import DifficultySelector from '../game/DifficultySelector';
 
 const AppLayout = () => {
-  const { gameMode, aiDifficulty, gameStatus, handleSelectMode, resetGame } = useGame();
+  const { 
+    gameMode, 
+    aiDifficulty, 
+    gameStatus, 
+    handleSelectMode, 
+    resetGame, 
+    handleSelectDifficulty 
+  } = useGame();
   const [drawerOpen, setDrawerOpen] = useState(false);
   
   const showBackButton = gameMode !== null;
@@ -23,9 +34,15 @@ const AppLayout = () => {
   }, [drawerOpen]);
   
   const handleBack = () => {
+    console.log('Botón volver presionado:', { gameMode, aiDifficulty });
+    
     if (gameMode === 'ai' && aiDifficulty) {
+      // Si estamos en el juego contra IA con dificultad seleccionada,
+      // volvemos a la selección de dificultad
+      handleSelectDifficulty(null);
       handleSelectMode('ai');
     } else {
+      // En cualquier otro caso, volvemos a la selección de modos
       handleSelectMode(null);
     }
   };
@@ -49,6 +66,18 @@ const AppLayout = () => {
     <>
       <AppHeader />
       
+      <div className="flex-1 flex items-center justify-center w-full pb-20">
+        {!gameMode ? (
+          <GameModesScreen onSelectMode={handleSelectMode} />
+        ) : gameMode === 'ai' && !aiDifficulty ? (
+          <DifficultySelector onSelectDifficulty={handleSelectDifficulty} />
+        ) : (
+          <div className="w-full">
+            <GameScreen />
+          </div>
+        )}
+      </div>
+      
       <NavigationBar 
         showBackButton={showBackButton}
         onBackClick={handleBack}
@@ -61,6 +90,15 @@ const AppLayout = () => {
         onMenuOptionClick={handleMenuOption}
         showRestartOption={gameMode && gameStatus !== 'won'}
       />
+      
+      <motion.div 
+        className="text-xs text-white/50 mt-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        © 2025 Konect4 - Todos los derechos reservados
+      </motion.div>
     </>
   );
 };
