@@ -24,7 +24,12 @@ const Register = () => {
     // Validaciones del formulario
     const validateForm = () => {
         const { firstName, lastName, email, phone, password, confirmPassword } = formData;
-    
+        
+        // Validar que todos los campos esten llenos
+        if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+            return 'Por favor, completa todos los campos.';
+        }
+
         // Validar nombre
         if (!firstName || firstName.length < 2 || firstName.length > 50) {
           return 'El nombre debe tener entre 2 y 50 caracteres.';
