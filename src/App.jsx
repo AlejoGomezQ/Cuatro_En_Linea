@@ -3,6 +3,7 @@ import AppLayout from './components/layout/AppLayout'
 import { GameProvider } from './context/GameContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './screens/Login'; // Importa la pantalla de Login
+import Register from './screens/Register'; // Importa la pantalla de registro
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} /> {/* Ruta para la pantalla de Login */}
               <Route path="/game" element={<AppLayout />} /> {/* Ruta para la pantalla del juego */}
+              <Route path="/register" element={<Register />} /> {/* Ruta para la pantalla de registro */}
             </Routes>
           </Router>
       </GameProvider>
