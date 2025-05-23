@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import { s } from 'framer-motion/client';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -19,25 +20,59 @@ const Register = () => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
     };
+
+    // Validaciones del formulario
+    const validateForm = () => {
+        const { firstName, lastName, email, phone, password, confirmPassword } = formData;
+    
+        // Validar nombre
+        if (!firstName || firstName.length < 2 || firstName.length > 50) {
+          return 'El nombre debe tener entre 2 y 50 caracteres.';
+        }
+    
+        // Validar apellido
+        if (!lastName || lastName.length < 2 || lastName.length > 50) {
+          return 'El apellido debe tener entre 2 y 50 caracteres.';
+        }
+    
+        // Validar correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          return 'Por favor, ingresa un correo electrónico válido.';
+        }
+    
+        // Validar número de teléfono
+        const phoneRegex = /^[0-9]{10}$/; // Acepta solo 10 dígitos
+        if (!phone || !phoneRegex.test(phone)) {
+          return 'Por favor, ingresa un número de teléfono válido (10 dígitos).';
+        }
+    
+        // Validar contraseña
+        const passwordregex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])/;
+        if (!password || password.length < 6 || !passwordregex.test(password)) {
+          return 'La contraseña debe tener al menos 6 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
+        }
+    
+        // Validar confirmación de contraseña
+        if (password !== confirmPassword) {
+          return 'Las contraseñas no coinciden.';
+        }
+    
+        return null;
+      };
   
     const handleRegister = () => {
-      const { firstName, lastName, email, phone, password, confirmPassword } = formData;
-  
-      if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
-        setError('Por favor, completa todos los campos.');
-        return;
-      }
-  
-      if (password !== confirmPassword) {
-        setError('Las contraseñas no coinciden.');
-        return;
-      }
-  
-      setError('');
-      // Aquí puedes agregar la lógica para registrar al usuario
-      console.log('Usuario registrado:', formData);
-      navigate('/'); // Redirige a la pantalla de login después del registro
-    };
+        const validationError = validateForm();
+        if (validationError) {
+          setError(validationError);
+          return;
+        }
+    
+        setError('');
+        // Aquí puedes agregar la lógica para registrar al usuario
+        console.log('Usuario registrado:', formData);
+        navigate('/'); // Redirige a la pantalla de login después del registro
+      };
   
     return (
       <div className="flex flex-col items-center justify-center h-full w-full p-4">
