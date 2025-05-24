@@ -26,8 +26,8 @@ const Register = () => {
         const { firstName, lastName, email, phone, password, confirmPassword } = formData;
         
         // Validar que todos los campos esten llenos
-        if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
-            return 'Por favor, completa todos los campos.';
+        if (!firstName && !lastName && !email && !phone && !password && !confirmPassword) {
+            return 'Por favor, completa los campos.';
         }
 
         // Validar nombre

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Mostrar/Ocultar contraseña
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ const Login = () => {
             {error}
           </motion.p>
         )}
+
         <div className="mb-4">
           <label className="block text-slate-300 text-sm font-bold mb-2">
             Correo Electrónico
@@ -65,18 +67,29 @@ const Login = () => {
             className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
+
         <div className="mb-6">
           <label className="block text-slate-300 text-sm font-bold mb-2">
             Contraseña
           </label>
-          <input
-            type="password"
-            placeholder="Ingresa tu contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)} // Cambia el estado de mostrar/ocultar contraseña
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-yellow-400"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
         </div>
+
         <div className="flex flex-col space-y-4">
           <Button onClick={handleLogin} fullWidth={true}>
             Iniciar Sesión
