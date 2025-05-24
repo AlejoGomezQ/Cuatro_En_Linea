@@ -15,7 +15,9 @@ const Register = () => {
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
-  
+    const [showPassword, setShowPassword] = useState(false); // Mostrar/Ocultar contraseña
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Mostrar/Ocultar confirmación de contraseña
+
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
@@ -150,27 +152,41 @@ const Register = () => {
               className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-slate-300 text-sm font-bold mb-2">Contraseña</label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Ingresa tu contraseña"
               value={formData.password}
               onChange={handleChange}
               className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-10 text-slate-400 hover:text-yellow-400"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block text-slate-300 text-sm font-bold mb-2">Confirmar Contraseña</label>
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               name="confirmPassword"
               placeholder="Confirma tu contraseña"
               value={formData.confirmPassword}
               onChange={handleChange}
               className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-10 text-slate-400 hover:text-yellow-400"
+            >
+              {showConfirmPassword ? '🙈' : '👁️'}
+            </button>
           </div>
           <Button onClick={handleRegister} fullWidth={true}>
             Registrarse
