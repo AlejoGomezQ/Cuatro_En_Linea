@@ -6,6 +6,7 @@ import Login from './screens/Login'
 import Register from './screens/Register'
 import About from './screens/About'
 import Help from './screens/Help';
+import Information from './screens/Information';
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'
@@ -31,6 +32,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/about" element={<About />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/information" element={<Information />} />
             <Route path="*" element={<div className="text-white">404 - Página no encontrada</div>} />
           </Routes>  
           </Router> 

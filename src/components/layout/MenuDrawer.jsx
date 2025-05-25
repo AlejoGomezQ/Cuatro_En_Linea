@@ -67,7 +67,7 @@ const MenuDrawer = ({ isOpen, onClose, onMenuOptionClick, showRestartOption }) =
                   </svg>
                 }
                 title="Cómo jugar"
-                description="Próximamente"
+                description="Guía de instrucciones y consejos"
               />
               
               <MenuItem 
@@ -79,6 +79,17 @@ const MenuDrawer = ({ isOpen, onClose, onMenuOptionClick, showRestartOption }) =
                 }
                 title="Acerca de"
                 description="Información sobre Konect4"
+              />
+
+              <MenuItem 
+                onClick={() => {navigate('/Information'); }}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8h18M3 16h18M5 12h14" />
+                  </svg>
+                }
+                title="Noticias"
+                description="Novedades y actualizaciones"
               />
             </ul>
           </div>

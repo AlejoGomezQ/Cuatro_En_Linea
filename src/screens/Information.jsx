@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const Help = () => {
+const Information = () => {
   const navigate = useNavigate();
 
   // Puedes ajustar si quieres que regrese a la pantalla anterior o a /game:
@@ -31,10 +31,10 @@ return (
                 <motion.h1
                     className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 tracking-tight mb-1"
                 >
-                    Help
+                    Information
                 </motion.h1>
                 <span className="text-slate-200 text-lg font-light tracking-wide">
-                    Konect4 - Como jugar?
+                    Konect4 - Novedades y actualizaciones
                 </span>
             </div>
         </motion.header>
@@ -46,22 +46,23 @@ return (
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
         >
+            
+
             <section>
-                <h2 className="text-xl font-semibold text-yellow-300 mb-2">Instrucciones Básicas</h2>
+                <h2 className="text-xl font-semibold text-yellow-300 mb-2">Novedades</h2>
                 <ul className="list-disc list-inside text-white ml-2 space-y-1">
-                    <li>Selecciona una columna para colocar tu ficha.</li>
-                    <li>Turnos alternados entre los jugadores.</li>
-                    <li>El objetivo es conectar 4 fichas del mismo color en línea, ya sea vertical, horizontal o diagonal.</li>
-                    <li>El juego termina cuando un jugador gana o se llena el tablero (empate).</li>
+                    <li>Nuevo modo de juego: " 1 vs IA".</li>
+                    <li>Mejoras en la IA para una experiencia de juego más desafiante.</li>
+                    <li>Interfaz de usuario actualizada con nuevos gráficos y animaciones.</li>
                 </ul>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-yellow-300 mb-2">Consejos</h2>
+                <h2 className="text-xl font-semibold text-yellow-300 mb-2">Actualizaciones</h2>
                 <ul className="list-disc list-inside text-white ml-2 space-y-1">
-                    <li>Piensa tus movimientos y anticipa los del oponente.</li>
-                    <li>Intenta bloquear las combinaciones ganadoras del rival.</li>
-                    <li>¡Diviértete y  <span className="font-bold text-yellow-300">desafía a tus amigos o a la IA!</span></li>
+                    <li>Mejoras en la IA para una experiencia de juego más desafiante.</li>
+                    <li>Corrección de errores y optimización del rendimiento.</li>
+                    <li>Interfaz de usuario mejorada para una navegación más fluida.</li>
                 </ul>
             </section>
 
@@ -75,4 +76,4 @@ return (
 );
 };
 
-export default Help;
+export default Information;
