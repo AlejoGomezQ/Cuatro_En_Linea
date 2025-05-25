@@ -7,7 +7,6 @@ import Register from './screens/Register'
 import About from './screens/About'
 import Help from './screens/Help';
 import Information from './screens/Information';
-import appFirebase from '../credenciales'; 
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'

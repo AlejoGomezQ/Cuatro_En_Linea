@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import appFirebase from "../../credenciales"; // Ajusta la ruta si es necesario
 import { getAuth } from "firebase/auth";
+import Swal from "sweetalert2";
 
 const auth = getAuth(appFirebase);
 
@@ -11,8 +12,17 @@ const AppHeader = () => {
 
   const handleBack = () => {
     auth.signOut();
-    alert("¡Has cerrado sesión exitosamente!");
-    navigate("/");
+    Swal.fire({
+      title: "¡Has cerrado sesión exitosamente!",
+      text: "¡Hasta luego!",
+      icon: "success",
+      showConfirmButton: false,         
+      timer: 1500,                      
+      background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)", 
+      color: "#fff",
+    }).then(() => {
+      navigate("/");
+    });
   };
 
   return (

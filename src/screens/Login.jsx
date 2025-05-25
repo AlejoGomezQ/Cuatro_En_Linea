@@ -2,47 +2,62 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 // Importando módulos de Firebase
 import appFirebase from '../credenciales'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 const auth = getAuth(appFirebase)
 
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Mostrar/Ocultar contraseña
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-  if (!email || !password) {
-    setError('Por favor, completa todos los campos.');
-    return;
-  }
-  setError('');
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    if (!user.emailVerified) {
-      await auth.signOut();
-      setError('Por favor verifica tu correo antes de iniciar sesión.');
+    if (!email || !password) {
+      setError('Por favor, completa todos los campos.');
       return;
     }
-    navigate('/game'); // Redirige a la pantalla de juego si el login es exitoso
-  } catch (error) {
-    // Manejo de errores comunes de Firebase Auth
-    if (error.code === 'auth/user-not-found') {
-      setError('Usuario no encontrado.');
-    } else if (error.code === 'auth/wrong-password') {
-      setError('Contraseña incorrecta.');
-    } else if (error.code === 'auth/invalid-email') {
-      setError('Correo electrónico inválido.');
-    } else {
-      setError('Error al iniciar sesión. Intenta de nuevo.');
+    setError('');
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        await auth.signOut();
+        setError('Por favor verifica tu correo antes de iniciar sesión.');
+        return;
+      }
+
+      Swal.fire({
+        title: "¡Has iniciado sesión exitosamente!",
+        text: "¡Bienvenido!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+        background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)",
+        color: "#fff",
+      }).then(() => {
+        navigate('/game');
+      });
+
+    } catch (error) {
+      if (error.code === 'auth/user-not-found') {
+        setError('Usuario no encontrado.');
+      } else if (error.code === 'auth/wrong-password') {
+        setError('Contraseña incorrecta.');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('Correo electrónico inválido.');
+      } else {
+        setError('Error al iniciar sesión. Intenta de nuevo.');
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-4">
@@ -107,7 +122,7 @@ const Login = () => {
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)} // Cambia el estado de mostrar/ocultar contraseña
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-yellow-400"
             >
               {showPassword ? '🙈' : '👁️'}
