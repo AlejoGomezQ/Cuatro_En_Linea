@@ -18,11 +18,11 @@ const Help = () => {
         transition={{ duration: 0.4 }}
       >
         <button
-          aria-label="Cerrar o volver"
+          aria-label="volver"
           onClick={handleBack}
           className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-white/20 transition-colors"
         >
-          {/* Flecha izquierda SVG */}
+       
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white"
             fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -32,11 +32,9 @@ const Help = () => {
           <motion.h1
             className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 tracking-tight mb-1"
           >
-            Ayuda
+            Help
           </motion.h1>
-          <span className="text-slate-200 text-lg font-light tracking-wide">
-            Cómo jugar Konect4
-          </span>
+
         </div>
       </motion.header>
 
@@ -66,6 +64,10 @@ const Help = () => {
           </ul>
         </section>
       </motion.section>
+
+      <footer className="mt-8 text-slate-400 text-xs">
+      © 2025 Konect4 — Universidad Pontificia Bolivariana. Todos los derechos reservados.
+        </footer>
     </div>
   );
 };
