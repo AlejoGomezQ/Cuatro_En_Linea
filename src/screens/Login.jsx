@@ -3,6 +3,11 @@ import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 
+// Importando módulos de Firebase
+import appFirebase from '../credenciales'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+const auth = getAuth(appFirebase)
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,14 +15,34 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      setError('Por favor, completa todos los campos.');
+  const handleLogin = async () => {
+  if (!email || !password) {
+    setError('Por favor, completa todos los campos.');
+    return;
+  }
+  setError('');
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    if (!user.emailVerified) {
+      await auth.signOut();
+      setError('Por favor verifica tu correo antes de iniciar sesión.');
       return;
     }
-    setError('');
-    navigate('/game'); // Redirige a la pantalla de juego
-  };
+    navigate('/game'); // Redirige a la pantalla de juego si el login es exitoso
+  } catch (error) {
+    // Manejo de errores comunes de Firebase Auth
+    if (error.code === 'auth/user-not-found') {
+      setError('Usuario no encontrado.');
+    } else if (error.code === 'auth/wrong-password') {
+      setError('Contraseña incorrecta.');
+    } else if (error.code === 'auth/invalid-email') {
+      setError('Correo electrónico inválido.');
+    } else {
+      setError('Error al iniciar sesión. Intenta de nuevo.');
+    }
+  }
+};
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-4">

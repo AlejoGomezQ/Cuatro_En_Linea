@@ -4,6 +4,14 @@ import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { s } from 'framer-motion/client';
 
+// Importar modulos necesarios para Firebase
+import appFirebase from '../credenciales';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut} from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+
 const Register = () => {
     const [formData, setFormData] = useState({
       firstName: '',
@@ -68,7 +76,7 @@ const Register = () => {
         return null;
       };
   
-    const handleRegister = () => {
+    const handleRegister = async() => {
         const validationError = validateForm();
         if (validationError) {
           setError(validationError);
@@ -76,10 +84,49 @@ const Register = () => {
         }
     
         setError('');
-        // Aquí puedes agregar la lógica para registrar al usuario
-        console.log('Usuario registrado:', formData);
-        navigate('/'); // Redirige a la pantalla de login después del registro
-      };
+
+        // Lógica para registrar al usuario
+        try{
+          // Crear usuario en Authentication
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            formData.email,
+            formData.password
+          );
+          const user = userCredential.user;
+
+          // Enviar correo de verificación
+          await sendEmailVerification(user, {
+            url: 'http://localhost:5173/',
+            handleCodeInApp: false
+          });
+
+          // Almacenar datos en Firestore
+          await setDoc(doc(db, 'users', user.uid), {
+            email: formData.email,
+            name: formData.firstName,
+            lastname: formData.lastName,
+            phoneNumber: formData.phone,
+          });
+
+          
+          await signOut(auth);
+
+          // Mensaje de éxito y redirección al login
+          alert('Registro exitoso. Por favor revisa tu correo y verifica tu cuenta antes de iniciar sesión.');
+          navigate('/');
+        }catch(error){
+          if (error.code === 'auth/email-already-in-use') {
+            setError('El correo ya está registrado.');
+          } else if (error.code === 'auth/invalid-email') {
+            setError('Correo electrónico inválido.');
+          } else if (error.code === 'auth/weak-password') {
+            setError('La contraseña es muy débil.');
+          } else {
+            setError('Error al registrar. Intenta de nuevo.');
+          }
+      }
+    };
   
     return (
       <div className="flex flex-col items-center justify-center h-full w-full p-4">
