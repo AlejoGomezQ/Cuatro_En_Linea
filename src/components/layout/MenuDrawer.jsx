@@ -1,4 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import About from '../../screens/About';
+
 
 const MenuItem = ({ onClick, icon, title, description, disabled = false }) => (
   <li>
@@ -16,6 +20,9 @@ const MenuItem = ({ onClick, icon, title, description, disabled = false }) => (
 );
 
 const MenuDrawer = ({ isOpen, onClose, onMenuOptionClick, showRestartOption }) => {
+  
+  const navigate = useNavigate();
+  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -65,7 +72,7 @@ const MenuDrawer = ({ isOpen, onClose, onMenuOptionClick, showRestartOption }) =
               />
               
               <MenuItem 
-                onClick={() => onMenuOptionClick('about')}
+                onClick={() => navigate('/about')}
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

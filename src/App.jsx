@@ -4,6 +4,7 @@ import { GameProvider } from './context/GameContext'
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
 import Login from './screens/Login'
 import Register from './screens/Register'
+import About from './screens/About'
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'
@@ -25,6 +26,9 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/game" element={<AppLayout />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About/>} />
+            <Route path="*" element={<div className="text-white">404 - Página no encontrada</div>} />
+
           </Routes>
         </Router>
       </GameProvider>
@@ -56,6 +60,9 @@ function AuthRedirect({ setUser, setEmail }) {
         if (location.pathname !== '/register') {
           navigate('/', { replace: true });
         }
+
+        if (location.pathname === '/about') return;
+
       }
     });
     return () => unsubscribe();
