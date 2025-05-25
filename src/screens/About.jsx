@@ -24,7 +24,7 @@ const About = () => {
   const handleBack = () => navigate(-1);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4">
+    <div className="min-h-screen flex flex-col items-center justify-between px-4 py-6 ">
       <motion.header
         className="w-full flex items-center justify-center relative px-4 py-5 bg-gradient-to-r from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl mb-6 shadow-lg"
         initial={{ opacity: 0, y: -30 }}
@@ -49,13 +49,13 @@ const About = () => {
             About
           </motion.h1>
           <span className="text-slate-200 text-lg font-light tracking-wide">
-            Konect4 - Acerca del Proyecto
+            Konect4
           </span>
         </div>
       </motion.header>
 
       <motion.section
-        className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-slate-700/50 w-full max-w-lg flex flex-col gap-5"
+        className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-slate-700/50 w-full max-w-lg flex flex-col gap-5 py-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -73,7 +73,7 @@ const About = () => {
             <li>Juego en tiempo real contra otro jugador o contra la IA.</li>
             <li>Interfaz intuitiva y adaptativa para todos los dispositivos.</li>
             <li>Gestión de usuarios con autenticación segura.</li>
-            <li>Historial y estadísticas de partidas. <span className="font-bold text-yellow-300">¡Próximamente!</span></li>
+            
           </ul>
         </section>
 
@@ -90,9 +90,12 @@ const About = () => {
         </section>
       </motion.section>
 
-      <footer className="mt-8 text-slate-400 text-xs">
-        © 2025 Konect4 — Universidad Pontificia Bolivariana. Todos los derechos reservados.
+      <footer className="p-2 border-t border-white/10 text-center">
+      <p className="text-white/50">© 2025 Konect4 — UPB.</p>
+      <p className="text-white/50">Todos los derechos reservados.</p>
       </footer>
+      
+
     </div>
   );
 };

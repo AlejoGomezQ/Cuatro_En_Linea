@@ -9,7 +9,7 @@ const Information = () => {
   const handleBack = () => navigate(-1);
 
 return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4">
+    <div className="min-h-screen flex flex-col items-center justify-between px-4 py-6">
         {/* Header con botón de volver */}
         <motion.header
             className="w-full flex items-center justify-center relative px-4 py-5 bg-gradient-to-r from-indigo-900/80 to-purple-900/80 backdrop-blur-md rounded-2xl mb-6 shadow-lg"
@@ -34,14 +34,14 @@ return (
                     Information
                 </motion.h1>
                 <span className="text-slate-200 text-lg font-light tracking-wide">
-                    Konect4 - Novedades y actualizaciones
+                    Novedades y actualizaciones
                 </span>
             </div>
         </motion.header>
 
         {/* Cuerpo de la ayuda */}
         <motion.section
-            className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-slate-700/50 w-full max-w-lg flex flex-col gap-5"
+            className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-slate-700/50 w-full max-w-lg flex flex-col gap-5 py-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -54,6 +54,7 @@ return (
                     <li>Nuevo modo de juego: " 1 vs IA".</li>
                     <li>Mejoras en la IA para una experiencia de juego más desafiante.</li>
                     <li>Interfaz de usuario actualizada con nuevos gráficos y animaciones.</li>
+                    <li>Historial y estadísticas de partidas. <span className="font-bold text-yellow-300">¡Próximamente!</span></li>
                 </ul>
             </section>
 
@@ -69,9 +70,10 @@ return (
         
         </motion.section>
 
-        <footer className="mt-8 text-slate-400 text-xs">
-            © 2025 Konect4 — Universidad Pontificia Bolivariana. Todos los derechos reservados.
-        </footer>
+        <footer className="p-6  border-t border-white/10 text-center">
+      <p className="text-white/50">© 2025 Konect4 — UPB.</p>
+      <p className="text-white/50">Todos los derechos reservados.</p>
+      </footer>
     </div>
 );
 };
