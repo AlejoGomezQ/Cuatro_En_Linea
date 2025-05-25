@@ -7,6 +7,7 @@ import Register from './screens/Register'
 import About from './screens/About'
 import Help from './screens/Help';
 import Information from './screens/Information';
+import appFirebase from '../credenciales'; 
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'
@@ -42,9 +43,9 @@ function App() {
   )
 }
 
-// 
+// --- Redirección automática según autenticación y ruta ---
 function AuthRedirect({ setUser, setEmail }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -53,14 +54,11 @@ function AuthRedirect({ setUser, setEmail }) {
       if (user) {
         setEmail(user.email);
         if (user.emailVerified) {
-          // Solo redirige a /game si está en login o register
-          if (location.pathname === '/' || location.pathname === '/register') {
-            navigate('/game', { replace: true });
-          }
+          // El usuario autenticado y verificado puede acceder a cualquier ruta
         } else if (location.pathname === '/register') {
           // Permite registro sin verificar
         } else {
-          // Si no está verificado, cierra sesión y muestra mensaje
+          // Si el correo no está verificado, cierra sesión y muestra mensaje
           auth.signOut();
           alert('Por favor, verifica tu correo electrónico antes de iniciar sesión.');
           navigate('/', { replace: true });
@@ -78,9 +76,10 @@ function AuthRedirect({ setUser, setEmail }) {
       }
     });
     return () => unsubscribe();
-  }, [navigate, setUser, setEmail, location.pathname])
+  }, [navigate, setUser, setEmail, location.pathname]);
 
-  return null
+  return null;
 }
+
 
 export default App
