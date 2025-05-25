@@ -6,7 +6,7 @@ import { s } from 'framer-motion/client';
 
 // Importar modulos necesarios para Firebase
 import appFirebase from '../credenciales';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut} from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const auth = getAuth(appFirebase);
@@ -95,6 +95,12 @@ const Register = () => {
           );
           const user = userCredential.user;
 
+          // Enviar correo de verificación
+          await sendEmailVerification(user, {
+            url: 'http://localhost:5173/',
+            handleCodeInApp: false
+          });
+
           // Almacenar datos en Firestore
           await setDoc(doc(db, 'users', user.uid), {
             email: formData.email,
@@ -103,7 +109,12 @@ const Register = () => {
             phoneNumber: formData.phone,
           });
 
-        navigate('/');
+          
+          await signOut(auth);
+
+          // Mensaje de éxito y redirección al login
+          alert('Registro exitoso. Por favor revisa tu correo y verifica tu cuenta antes de iniciar sesión.');
+          navigate('/');
         }catch(error){
           if (error.code === 'auth/email-already-in-use') {
             setError('El correo ya está registrado.');

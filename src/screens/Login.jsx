@@ -22,7 +22,13 @@ const Login = () => {
   }
   setError('');
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    if (!user.emailVerified) {
+      await auth.signOut();
+      setError('Por favor verifica tu correo antes de iniciar sesión.');
+      return;
+    }
     navigate('/game'); // Redirige a la pantalla de juego si el login es exitoso
   } catch (error) {
     // Manejo de errores comunes de Firebase Auth

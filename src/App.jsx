@@ -32,25 +32,33 @@ function App() {
   )
 }
 
-// Componente funcional correctamente montado dentro del Router
+// 
 function AuthRedirect({ setUser, setEmail }) {
   const navigate = useNavigate()
   const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
+      setUser(user);
       if (user) {
-        setEmail(user.email)
-        navigate('/game', { replace: true })
+        setEmail(user.email);
+        // Solo permite acceso si el correo está verificado
+        if (user.emailVerified) {
+          navigate('/game', { replace: true });
+        } else {
+          // Si no está verificado, cierra sesión y muestra mensaje
+          auth.signOut();
+          alert('Por favor, verifica tu correo electrónico antes de iniciar sesión.');
+          navigate('/', { replace: true });
+        }
       } else {
-        setEmail(null)
+        setEmail(null);
         if (location.pathname !== '/register') {
           navigate('/', { replace: true });
         }
       }
-    })
-    return () => unsubscribe()
+    });
+    return () => unsubscribe();
   }, [navigate, setUser, setEmail, location.pathname])
 
   return null
