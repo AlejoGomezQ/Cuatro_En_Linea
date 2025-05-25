@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
-import { s } from 'framer-motion/client';
+import Swal from 'sweetalert2';
 
 // Importar modulos necesarios para Firebase
 import appFirebase from '../credenciales';
@@ -113,8 +113,18 @@ const Register = () => {
           await signOut(auth);
 
           // Mensaje de éxito y redirección al login
-          alert('Registro exitoso. Por favor revisa tu correo y verifica tu cuenta antes de iniciar sesión.');
-          navigate('/');
+          Swal.fire({
+                  title: 'Por favor revisa tu correo y verifica tu cuenta antes de iniciar sesión.',
+                  text: "¡Registro exitoso!",
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 3000,
+                  background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)",
+                  color: "#fff",
+                }).then(() => {
+                  navigate('/');
+                });
+                
         }catch(error){
           if (error.code === 'auth/email-already-in-use') {
             setError('El correo ya está registrado.');

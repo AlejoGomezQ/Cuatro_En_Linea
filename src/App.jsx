@@ -4,6 +4,9 @@ import { GameProvider } from './context/GameContext'
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
 import Login from './screens/Login'
 import Register from './screens/Register'
+import About from './screens/About'
+import Help from './screens/Help';
+import Information from './screens/Information';
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'
@@ -18,23 +21,30 @@ function App() {
 
   return (
     <div className="h-screen bg-gradient-to-b from-indigo-900 via-purple-800 to-pink-700 flex flex-col items-center justify-between p-4 overflow-hidden">
+      
       <GameProvider>
-        <Router>
+      <Router>
+        
           <AuthRedirect setUser={setUser} setEmail={setEmail} />
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/game" element={<AppLayout />} />
             <Route path="/register" element={<Register />} />
-          </Routes>
-        </Router>
+            <Route path="/about" element={<About />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/information" element={<Information />} />
+            <Route path="*" element={<div className="text-white">404 - Página no encontrada</div>} />
+          </Routes>  
+          </Router> 
       </GameProvider>
+      
     </div>
   )
 }
 
-// 
+// --- Redirección automática según autenticación y ruta ---
 function AuthRedirect({ setUser, setEmail }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -42,26 +52,33 @@ function AuthRedirect({ setUser, setEmail }) {
       setUser(user);
       if (user) {
         setEmail(user.email);
-        // Solo permite acceso si el correo está verificado
         if (user.emailVerified) {
-          navigate('/game', { replace: true });
+          // El usuario autenticado y verificado puede acceder a cualquier ruta
+        } else if (location.pathname === '/register') {
+          // Permite registro sin verificar
         } else {
-          // Si no está verificado, cierra sesión y muestra mensaje
+          // Si el correo no está verificado, cierra sesión y muestra mensaje
           auth.signOut();
           alert('Por favor, verifica tu correo electrónico antes de iniciar sesión.');
           navigate('/', { replace: true });
         }
       } else {
         setEmail(null);
-        if (location.pathname !== '/register') {
+        // Solo redirige a login si está en rutas protegidas
+        if (
+          location.pathname !== '/register' &&
+          location.pathname !== '/about' &&
+          location.pathname !== '/help'
+        ) {
           navigate('/', { replace: true });
         }
       }
     });
     return () => unsubscribe();
-  }, [navigate, setUser, setEmail, location.pathname])
+  }, [navigate, setUser, setEmail, location.pathname]);
 
-  return null
+  return null;
 }
+
 
 export default App
