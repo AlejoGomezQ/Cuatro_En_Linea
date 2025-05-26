@@ -11,6 +11,16 @@ const createEmptyBoard = () => (
     .map(() => Array(BOARD_COLUMNS).fill(0))
 );
 
+export const useGameReset = () => {
+  const { resetGame } = useGame();
+  const resetGameAndData = () => {
+    resetGame();
+    // Add any other reset functionality needed
+  };
+  
+  return resetGameAndData;
+};
+
 export const GameProvider = ({ children }) => {
   const [gameBoard, setGameBoard] = useState(createEmptyBoard());
   const [activePlayer, setActivePlayer] = useState(1);
@@ -31,6 +41,8 @@ export const GameProvider = ({ children }) => {
   const handleSelectDifficulty = useCallback((difficulty) => {
     setAiDifficulty(difficulty);
   }, []);
+
+  
 
   const makeMove = useCallback(
     (selectedColumn) => {

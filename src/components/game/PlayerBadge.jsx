@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import AIThinkingIndicator from './AIThinkingIndicator';
 import { useGame } from '../../context/GameContext';
 
-const PlayerBadge = ({ player, isActive }) => {
+const PlayerBadge = ({ player, isActive, userName, isLoading }) => {
   const { gameMode, isAiThinking } = useGame();
   
   const playerStyles = player === 1 
@@ -10,7 +10,11 @@ const PlayerBadge = ({ player, isActive }) => {
     : 'bg-gradient-to-r from-blue-500 to-indigo-600 border-blue-300';
   
   const isAI = gameMode === 'ai' && player === 2;
-  const playerName = player === 1 ? 'Jugador 1' : (isAI ? 'IA' : 'Jugador 2');
+  
+  // Modified to use userName for both players
+  const playerName = player === 1 
+    ? (isLoading ? "" : (userName || 'Jugador 1')) 
+    : (isAI ? 'IA' : (userName || 'Jugador 2'));  // Use userName for player 2 as well
   
   return (
     <div className="flex flex-col items-center">
@@ -23,7 +27,13 @@ const PlayerBadge = ({ player, isActive }) => {
         <div className="w-5 h-5 rounded-full bg-white shadow-inner flex items-center justify-center">
           <div className={`w-3 h-3 rounded-full ${player === 1 ? 'bg-red-500' : 'bg-blue-500'}`}></div>
         </div>
-        <span className="font-bold text-sm md:text-base tracking-wide">{playerName}</span>
+        {player === 1 && isLoading ? (
+          <span className="font-bold text-sm md:text-base tracking-wide min-w-[80px] text-center">
+            <span className="animate-pulse">•••</span>
+          </span>
+        ) : (
+          <span className="font-bold text-sm md:text-base tracking-wide">{playerName}</span>
+        )}
         {isAI && (
           <motion.div 
             className="ml-1 text-lg"

@@ -91,14 +91,7 @@ const AppLayout = () => {
         showRestartOption={gameMode && gameStatus !== 'won'}
       />
       
-      <motion.div 
-        className="text-xs text-white/50 mt-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        © 2025 Konect4 - Todos los derechos reservados
-      </motion.div>
+      
     </>
   );
 };
