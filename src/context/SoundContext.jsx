@@ -4,14 +4,18 @@ import useGameSounds from '../hooks/useGameSounds';
 const SoundContext = createContext();
 
 export const SoundProvider = ({ children }) => {
-  const { playMoveSound, playWinSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const { playMoveSound: originalPlayMoveSound, 
+          playWinSound: originalPlayWinSound, 
+          startBackgroundMusic, 
+          stopBackgroundMusic } = useGameSounds();
+          
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const initializedRef = useRef(false);
 
-  // Detección de cambios en isMusicPlaying para depuración
+  // Detección de cambios en estado de sonido para depuración
   useEffect(() => {
-    console.log("Music playing state changed:", isMusicPlaying);
-  }, [isMusicPlaying]);
+    console.log("Sound state changed:", isSoundEnabled);
+  }, [isSoundEnabled]);
 
   // Gestionar interacción del usuario para la primera reproducción
   useEffect(() => {
@@ -20,8 +24,8 @@ export const SoundProvider = ({ children }) => {
       const handleFirstInteraction = () => {
         console.log("User interaction detected");
         // Solo reproducimos si queremos que comience automáticamente
-        if (!isMusicPlaying) {
-          toggleMusic();
+        if (!isSoundEnabled) {
+          setAllSounds(true);
         }
         document.removeEventListener('click', handleFirstInteraction);
         initializedRef.current = true;
@@ -33,51 +37,48 @@ export const SoundProvider = ({ children }) => {
         document.removeEventListener('click', handleFirstInteraction);
       };
     }
-  }, [isMusicPlaying]);
+  }, [isSoundEnabled]);
 
   // Limpiar música al desmontar
   useEffect(() => {
     return () => {
-      if (isMusicPlaying) {
+      if (isSoundEnabled) {
         stopBackgroundMusic();
       }
     };
-  }, [stopBackgroundMusic, isMusicPlaying]);
+  }, [stopBackgroundMusic, isSoundEnabled]);
 
-  const toggleMusic = () => {
-    console.log("Toggle music called, current state:", isMusicPlaying);
-    if (isMusicPlaying) {
-      stopBackgroundMusic();
-      setIsMusicPlaying(false);
-    } else {
+  // Función para controlar todos los sonidos (música y efectos)
+  const setAllSounds = (enabled) => {
+    console.log("Setting all sounds to:", enabled);
+    if (enabled) {
       startBackgroundMusic();
-      setIsMusicPlaying(true);
+    } else {
+      stopBackgroundMusic();
     }
+    setIsSoundEnabled(enabled);
   };
 
-  // Función para habilitar/deshabilitar todos los sonidos
-  const setAllSounds = (enabled) => {
-    if (enabled) {
-      if (!isMusicPlaying) {
-        startBackgroundMusic();
-        setIsMusicPlaying(true);
-      }
-    } else {
-      if (isMusicPlaying) {
-        stopBackgroundMusic();
-        setIsMusicPlaying(false);
-      }
+  // Funciones de sonido condicionadas al estado
+  const playMoveSound = () => {
+    if (isSoundEnabled) {
+      originalPlayMoveSound();
+    }
+  };
+  
+  const playWinSound = () => {
+    if (isSoundEnabled) {
+      originalPlayWinSound();
     }
   };
 
   return (
     <SoundContext.Provider 
       value={{ 
-        isMusicPlaying, 
-        toggleMusic, 
+        isMusicPlaying: isSoundEnabled, // Para mantener compatibilidad
         setAllSounds,
-        playMoveSound: isMusicPlaying ? playMoveSound : () => {},
-        playWinSound: isMusicPlaying ? playWinSound : () => {}
+        playMoveSound,
+        playWinSound
       }}
     >
       {children}

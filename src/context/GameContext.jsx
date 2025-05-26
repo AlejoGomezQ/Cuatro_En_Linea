@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { BOARD_COLUMNS, BOARD_ROWS, checkWinner } from '../utils/gameUtils';
 import { getAIMove } from '../utils/aiUtils';
-import useGameSounds from '../hooks/useGameSounds';
+import { useSound } from './SoundContext'; // Cambiado de useGameSounds a useSound
 
 const GameContext = createContext();
 
@@ -19,7 +19,7 @@ export const GameProvider = ({ children }) => {
   const [gameMode, setGameMode] = useState(null);
   const [aiDifficulty, setAiDifficulty] = useState(null);
   const [isAiThinking, setIsAiThinking] = useState(false);
-  const { playMoveSound, playWinSound } = useGameSounds();
+  const { playMoveSound, playWinSound } = useSound();
 
   const handleSelectMode = useCallback((mode) => {
     setGameMode(mode);
