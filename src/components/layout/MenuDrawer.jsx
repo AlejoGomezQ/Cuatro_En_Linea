@@ -1,21 +1,28 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
 const MenuItem = ({ onClick, icon, title, description, disabled = false }) => (
-  <li>
-    <button 
-      className={`w-full text-left p-4 text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors flex items-center ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-      onClick={disabled ? undefined : onClick}
-    >
-      {icon}
+  <motion.li
+    className={`bg-slate-800/80 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 w-full 
+      ${disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-slate-500/50'}`}
+    whileHover={!disabled ? { scale: 1.03, y: -5 } : {}}
+    whileTap={!disabled ? { scale: 0.98 } : {}}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+    onClick={!disabled ? onClick : undefined}
+  >
+    <div className="flex items-center">
+      <div className="w-10 h-10 flex items-center justify-center text-white text-xl mr-4">
+        {icon}
+      </div>
       <div>
-        <h3 className="font-bold text-lg">{title}</h3>
+        <h3 className="font-bold text-lg text-white">{title}</h3>
         <p className="text-sm text-white/70">{description}</p>
       </div>
-    </button>
-  </li>
+    </div>
+  </motion.li>
 );
 
 const MenuDrawer = ({ isOpen, onClose, onMenuOptionClick, showRestartOption }) => {
