@@ -43,6 +43,7 @@ const GameModesScreen = ({ onSelectMode }) => {
       }
     }
   };
+  
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -74,7 +75,19 @@ const GameModesScreen = ({ onSelectMode }) => {
           />
         ))}
       </motion.div>
+
+      <motion.div 
+        className="text-xs text-center py-3 text-white/50 mt-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        © 2025 Konect4 - Todos los derechos reservados
+      </motion.div>
+
     </div>
+    
+    
   );
 };
 

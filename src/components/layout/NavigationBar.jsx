@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
+import { useGameReset } from '../../context/GameContext';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+
 
 const NavigationButton = ({ onClick, icon, ariaLabel }) => (
+  
+  
   <motion.button
     className="w-12 h-12 flex items-center justify-center text-white/80 hover:text-white transition-all"
     onClick={onClick}
@@ -25,6 +31,42 @@ const HomeIcon = () => (
 );
 
 const NavigationBar = ({ showBackButton, onBackClick, onMenuClick }) => {
+  const resetGameAndData = useGameReset();
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    Swal.fire({
+      title: "¿Estás seguro que deseas salir?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, volver",
+      cancelButtonText: "No",
+      confirmButtonColor: "#4f46e5",
+      cancelButtonColor: "#a21caf",
+      background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)",
+      color: "#fff",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        resetGameAndData();
+        
+        Swal.fire({
+          title: "¡Has regresado correctamente!",
+          text: "¡Vuelve Pronto!",
+          icon: "success",
+          showConfirmButton: false,         
+          timer: 1500,                      
+          background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)", 
+          color: "#fff",
+        }).then(() => {
+          if (onBackClick) {
+            onBackClick();
+          }
+        });
+      }
+    });
+  };
+
   return (
     <motion.div 
       className="fixed bottom-0 left-0 right-0 flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-800/80 to-purple-800/80 backdrop-blur-md z-30 border-t border-white/10"
@@ -35,7 +77,7 @@ const NavigationBar = ({ showBackButton, onBackClick, onMenuClick }) => {
       {showBackButton ? (
         <>
           <NavigationButton 
-            onClick={onBackClick} 
+            onClick={handleBackClick} 
             icon={<BackIcon />} 
             ariaLabel="Volver atrás" 
           />

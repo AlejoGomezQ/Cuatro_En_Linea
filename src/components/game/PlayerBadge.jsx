@@ -11,10 +11,10 @@ const PlayerBadge = ({ player, isActive, userName, isLoading }) => {
   
   const isAI = gameMode === 'ai' && player === 2;
   
-  // Only show player name when not loading for player 1
+  // Modified to use userName for both players
   const playerName = player === 1 
     ? (isLoading ? "" : (userName || 'Jugador 1')) 
-    : (isAI ? 'IA' : 'Jugador 2');
+    : (isAI ? 'IA' : (userName || 'Jugador 2'));  // Use userName for player 2 as well
   
   return (
     <div className="flex flex-col items-center">
