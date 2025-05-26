@@ -3,7 +3,7 @@ import { useMemo, useCallback } from "react";
 const useGameSounds = () => {
   const sounds = useMemo(
     () => ({
-      move: "/sounds/move.wav",
+      move: "/sounds/move.mp3",
       win: "/sounds/win.mp3",
     }),
     []
