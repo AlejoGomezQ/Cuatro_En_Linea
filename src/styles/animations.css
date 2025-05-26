@@ -1,26 +1,154 @@
 @keyframes fall {
-  from {
-    transform: translateY(-100%);
+  0% {
+    transform: translateY(-500%) scale(1.1);
+    opacity: 0.9;
   }
-  to {
+  40% {
+    transform: translateY(-100%) scale(1.05);
+  }
+  60% {
+    transform: translateY(0) scale(1);
+  }
+  75% {
+    transform: translateY(-15%) scale(0.95);
+  }
+  85% {
+    transform: translateY(0) scale(1.05);
+  }
+  92% {
+    transform: translateY(-7%) scale(0.98);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-winner {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 20px 5px rgba(255, 215, 0, 0.9), 0 0 30px 8px rgba(255, 150, 0, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7);
+  }
+}
+
+@keyframes confetti-rain {
+  0% { 
+    transform: translateY(0) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-100px) rotate(45deg) translateX(40px) scale(1);
+  }
+  50% {
+    transform: translateY(-200px) rotate(90deg) translateX(-30px) scale(0.9);
+  }
+  75% {
+    transform: translateY(-300px) rotate(135deg) translateX(20px) scale(0.8);
+    opacity: 0.7;
+  }
+  100% { 
+    transform: translateY(-400px) rotate(180deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes column-highlight {
+  0% {
+    opacity: 0;
+    transform: translateY(5%);
+  }
+  100% {
+    opacity: 0.3;
     transform: translateY(0);
   }
 }
 
-@keyframes confetti {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+@keyframes shine {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.3;
   }
   50% {
-    transform: translateY(-200px) rotate(360deg);
+    opacity: 0.5;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
   }
 }
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+@keyframes bounce-in {
+  0% { 
+    transform: scale(0.3); 
+    opacity: 0; 
   }
-  50% {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  50% { 
+    transform: scale(1.1); 
   }
+  70% { 
+    transform: scale(0.9); 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+.celda-jugador1, .celda-jugador2 {
+  animation: fall 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.celda-nueva {
+  animation: fall 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.celda-ganadora {
+  animation: pulse-winner 1.8s infinite;
+  z-index: 10;
+}
+
+/* Confetti elements that will be added to the DOM when a player wins */
+.confeti-piece {
+  position: absolute;
+  width: 10px;
+  height: 20px;
+  background-color: var(--color);
+  opacity: 0.8;
+  animation: confetti-rain 3s ease-out forwards;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Column highlight animation */
+.column-preview {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+  animation: column-highlight 0.3s forwards;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* Win line animation */
+.win-line {
+  position: absolute;
+  background: linear-gradient(to right, rgba(255, 215, 0, 0.7), rgba(255, 150, 0, 0.9));
+  z-index: 5;
+  animation: bounce-in 0.5s forwards;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
 }
