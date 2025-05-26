@@ -14,7 +14,7 @@ const GameScreen = () => {
     const { board, currentPlayer, gameStatus, makeMove, resetGame } = useGame();
     const { playMoveSound, playWinSound } = useSound(); // Obtenemos las funciones de sonido del contexto
 
-    const userName = useUserProfile(); // Use the hook to get user's name
+    const { userName, isLoading } = useUserProfile(); // Get loading state too
 
     // Maneja el movimiento y reproduce el sonido
     const handleMove = (col) => {
@@ -45,8 +45,8 @@ const GameScreen = () => {
                 <PlayerBadge 
                     player={1} 
                     isActive={currentPlayer === 1 && gameStatus === 'playing'}
-                    userName={userName} // Pass the username here
-                />
+                    userName={userName}
+                    isLoading = {isLoading}                />
                 
                 <PlayerBadge 
                     player={2} 

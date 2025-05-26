@@ -5,12 +5,14 @@ import { getFirestore } from 'firebase/firestore';
 import app from '../credenciales'; // Importa tu configuración de Firebase
 
 const useUserProfile = () => {
-  const [userName, setUserName] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setIsLoading(true);
       const user = auth.currentUser;
       if (user) {
         try {
@@ -26,12 +28,13 @@ const useUserProfile = () => {
           console.error("Error fetching user data:", error);
         }
       }
+      setIsLoading(false);
     };
 
     fetchUserData();
   }, []);
 
-  return userName;
+  return { userName, isLoading };
 };
 
 export default useUserProfile;
