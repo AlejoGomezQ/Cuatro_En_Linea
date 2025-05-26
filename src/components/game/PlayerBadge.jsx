@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import AIThinkingIndicator from './AIThinkingIndicator';
 import { useGame } from '../../context/GameContext';
 
-const PlayerBadge = ({ player, isActive }) => {
+const PlayerBadge = ({ player, isActive, userName }) => {
   const { gameMode, isAiThinking } = useGame();
   
   const playerStyles = player === 1 
@@ -10,7 +10,9 @@ const PlayerBadge = ({ player, isActive }) => {
     : 'bg-gradient-to-r from-blue-500 to-indigo-600 border-blue-300';
   
   const isAI = gameMode === 'ai' && player === 2;
-  const playerName = player === 1 ? 'Jugador 1' : (isAI ? 'IA' : 'Jugador 2');
+  const playerName = player === 1 
+    ? (userName || 'Jugador 1') // Use userName if available, otherwise fallback
+    : (isAI ? 'IA' : 'Jugador 2');
   
   return (
     <div className="flex flex-col items-center">

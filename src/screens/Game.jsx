@@ -7,10 +7,14 @@ import Button from '../components/ui/Button';
 import InfoMessage from '../components/ui/InfoMessage';
 import { useGame } from '../context/GameContext';
 import { useSound } from '../context/SoundContext'; // Importamos el hook de sonido del contexto
+import useUserProfile from '../hooks/useUserProfile'; // Add this import
+
 
 const GameScreen = () => {
     const { board, currentPlayer, gameStatus, makeMove, resetGame } = useGame();
     const { playMoveSound, playWinSound } = useSound(); // Obtenemos las funciones de sonido del contexto
+
+    const userName = useUserProfile(); // Use the hook to get user's name
 
     // Maneja el movimiento y reproduce el sonido
     const handleMove = (col) => {
@@ -40,7 +44,8 @@ const GameScreen = () => {
             <div className="flex justify-between items-center w-full max-w-md mb-8">
                 <PlayerBadge 
                     player={1} 
-                    isActive={currentPlayer === 1 && gameStatus === 'playing'} 
+                    isActive={currentPlayer === 1 && gameStatus === 'playing'}
+                    userName={userName} // Pass the username here
                 />
                 
                 <PlayerBadge 
