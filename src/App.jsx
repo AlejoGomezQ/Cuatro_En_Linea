@@ -8,6 +8,7 @@ import About from './screens/About'
 import Help from './screens/Help';
 import Information from './screens/Information';
 import { SoundProvider } from './context/SoundContext';
+import './styles/animations.css'
 
 
 // Importando módulos de Firebase
