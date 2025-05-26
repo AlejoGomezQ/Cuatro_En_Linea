@@ -11,19 +11,35 @@ const AppHeader = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    auth.signOut();
-    Swal.fire({
-      title: "¡Has cerrado sesión exitosamente!",
-      text: "¡Hasta luego!",
-      icon: "success",
-      showConfirmButton: false,         
-      timer: 1500,                      
-      background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)", 
-      color: "#fff",
-    }).then(() => {
-      navigate("/");
-    });
-  };
+  Swal.fire({
+    title: "¿Estás seguro que deseas cerrar sesión?",
+    text: "Tu sesión actual se cerrará.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, cerrar sesión",
+    cancelButtonText: "No",
+    confirmButtonColor: "#4f46e5",
+    cancelButtonColor: "#a21caf",
+    background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)",
+    color: "#fff",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      auth.signOut();
+      Swal.fire({
+        title: "¡Has cerrado sesión exitosamente!",
+        text: "¡Hasta luego!",
+        icon: "success",
+        showConfirmButton: false,         
+        timer: 1500,                      
+        background: "linear-gradient(90deg, #3730a3 0%, #a21caf 100%)", 
+        color: "#fff",
+      }).then(() => {
+        navigate("/");
+      });
+    }
+  });
+};
+
 
   return (
     <motion.header
