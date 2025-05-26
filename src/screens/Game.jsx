@@ -168,7 +168,7 @@ const GameScreen = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {gameStatus === "won" && <WinnerMessage />}
+        {gameStatus === "won" && <WinnerMessage player2Name={player2Name} />}
 
         <div 
           className="grid grid-cols-7 gap-1 md:gap-2 bg-slate-900/80 p-2 md:p-3 rounded-lg relative"
