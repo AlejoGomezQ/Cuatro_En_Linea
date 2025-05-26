@@ -7,6 +7,8 @@ import Register from './screens/Register'
 import About from './screens/About'
 import Help from './screens/Help';
 import Information from './screens/Information';
+import { SoundProvider } from './context/SoundContext';
+
 
 // Importando módulos de Firebase
 import appFirebase from './credenciales'
@@ -21,10 +23,9 @@ function App() {
 
   return (
     <div className="h-screen bg-gradient-to-b from-indigo-900 via-purple-800 to-pink-700 flex flex-col items-center justify-between p-4 overflow-hidden">
-      
+      <SoundProvider>
       <GameProvider>
       <Router>
-        
           <AuthRedirect setUser={setUser} setEmail={setEmail} />
           <Routes>
             <Route path="/" element={<Login />} />
@@ -37,6 +38,8 @@ function App() {
           </Routes>  
           </Router> 
       </GameProvider>
+      </SoundProvider>
+
       
     </div>
   )
