@@ -149,7 +149,7 @@ const GameScreen = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4">
+    <div className="flex flex-col items-center justify-center h-full w-full p-2">
       {/* Add the MenuDrawer component */}
       <MenuDrawer 
         isOpen={isMenuOpen}
@@ -172,7 +172,7 @@ const GameScreen = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className="text-white text-lg font-bold mb-4">Nombre del Jugador 2</h3>
+            <h3 className="text-white text-lg text-center font-bold mb-4">Nombre del Jugador 2</h3>
             <input 
               type="text"
               value={player2Name}
@@ -180,7 +180,7 @@ const GameScreen = () => {
               placeholder="Ingresa un nombre"
               className="w-full p-2 mb-4 bg-slate-700 text-white rounded border border-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
               autoFocus
-              maxLength={15} // Prevent extremely long names
+              maxLength={10}
             />
             <Button 
               onClick={handleSetPlayerName}
@@ -193,7 +193,7 @@ const GameScreen = () => {
       )}
 
       {/* Panel de jugadores */}
-      <div className="flex justify-between items-center w-full max-w-md mb-8">
+      <div className="flex justify-between items-center w-full max-w-md mb-4">
         <PlayerBadge
           player={1}
           isActive={currentPlayer === 1 && gameStatus === "playing"}
@@ -210,7 +210,7 @@ const GameScreen = () => {
 
       {/* Tablero de juego */}
       <motion.div
-        className="bg-slate-800/80 backdrop-blur-md rounded-xl p-4 shadow-xl border border-slate-700/50 w-full max-w-md"
+        className="bg-slate-800/80 backdrop-blur-md rounded-xl p-3 shadow-xl border border-slate-700/50 w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

@@ -47,26 +47,26 @@ const WinnerMessage = ({ player2Name }) => {
   
   return (
     <motion.div 
-      className="relative py-4 w-full"
+      className="relative py-3  w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
       {/* Trophy circle at top */}
       <motion.div
-        className="absolute -top-12 left-46 z-10"
+        className="absolute -top-8 left-36 "
         initial={{ opacity: 0, scale: 0, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 0.3, type: 'spring', stiffness: 300, damping: 15 }}
         style={{ transform: 'translateX(-50%)' }}
       >
-        <div className="flex items-center justify-center text-4xl bg-yellow-400 p-2 rounded-full shadow-xl border-2 border-yellow-300 h-16 w-16">
+        <div className="flex items-center justify-center text-2xl bg-yellow-400 p-2 rounded-full shadow-xl border-2 border-yellow-300 h-11 w-11">
           <span>🏆</span>
         </div>
       </motion.div>
     
       {/* Winner message banner */}
       <motion.div 
-        className={`bg-gradient-to-r ${winnerColor} text-white font-bold py-3 px-8 rounded-lg text-center shadow-lg mt-4`}
+        className={`bg-gradient-to-r ${winnerColor} text-white font-bold py-3 px-5 rounded-lg text-center shadow-lg mt-2`}
         initial={{ opacity: 0, scale: 0.5, y: -20 }}
         animate={{ 
           opacity: isVisible ? 1 : 0, 
