@@ -41,13 +41,13 @@ const Register = () => {
         }
 
         // Validar nombre
-        if (!firstName || firstName.length < 2 || firstName.length > 50) {
-          return 'El nombre debe tener entre 2 y 50 caracteres.';
+        if (!firstName || firstName.length < 2 || firstName.length > 10) {
+          return 'El nombre debe tener entre 2 y 10 caracteres.';
         }
     
         // Validar apellido
-        if (!lastName || lastName.length < 2 || lastName.length > 50) {
-          return 'El apellido debe tener entre 2 y 50 caracteres.';
+        if (!lastName || lastName.length < 2 || lastName.length > 10) {
+          return 'El apellido debe tener entre 2 y 10 caracteres.';
         }
     
         // Validar correo electrónico
@@ -139,9 +139,9 @@ const Register = () => {
     };
   
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full p-4">
+      <div className="flex flex-col items-center justify-center h-full w-full p-3">
         <motion.h1
-          className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 mb-4"
+          className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -150,14 +150,14 @@ const Register = () => {
         </motion.h1>
   
         <motion.div
-          className="w-full max-w-md bg-slate-800/80 backdrop-blur-md rounded-xl p-6 shadow-xl border border-slate-700/50"
+          className="w-full max-w-md bg-slate-800/80 backdrop-blur-md rounded-xl p-4 shadow-xl border border-slate-700/50"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
           {error && (
             <motion.p
-              className="text-red-500 text-sm mb-4"
+              className="text-red-500 text-xs mb-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
@@ -165,82 +165,82 @@ const Register = () => {
               {error}
             </motion.p>
           )}
-          <div className="mb-4">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Nombre</label>
+          <div className="mb-3">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Nombre</label>
             <input
               type="text"
               name="firstName"
-              placeholder="Ingresa tu nombre"
+              placeholder="Ingresa tu primer nombre"
               value={formData.firstName}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Apellido</label>
+          <div className="mb-3">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Apellido</label>
             <input
               type="text"
               name="lastName"
-              placeholder="Ingresa tu apellido"
+              placeholder="Ingresa tu primer apellido"
               value={formData.lastName}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Correo Electrónico</label>
+          <div className="mb-3">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Correo Electrónico</label>
             <input
               type="email"
               name="email"
               placeholder="Ingresa tu correo"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Número de Teléfono</label>
+          <div className="mb-3">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Número de Teléfono</label>
             <input
               type="tel"
               name="phone"
               placeholder="Ingresa tu número de teléfono"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
-          <div className="mb-4 relative">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Contraseña</label>
+          <div className="mb-3 relative">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Contraseña</label>
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Ingresa tu contraseña"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-10 text-slate-400 hover:text-yellow-400"
+              className="absolute right-2 top-7 text-slate-400 hover:text-yellow-400"
             >
               {showPassword ? '🙈' : '👁️'}
             </button>
           </div>
-          <div className="mb-6 relative">
-            <label className="block text-slate-300 text-sm font-bold mb-2">Confirmar Contraseña</label>
+          <div className="mb-4 relative">
+            <label className="block text-slate-300 text-xs font-bold mb-1">Confirmar Contraseña</label>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               name="confirmPassword"
               placeholder="Confirma tu contraseña"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-2 text-sm rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-10 text-slate-400 hover:text-yellow-400"
+              className="absolute right-2 top-7 text-slate-400 hover:text-yellow-400"
             >
               {showConfirmPassword ? '🙈' : '👁️'}
             </button>
