@@ -31,6 +31,8 @@ const Register = () => {
       setFormData({ ...formData, [name]: value });
     };
 
+    const handleBack = () => navigate("/");
+
     // Validaciones del formulario
     const validateForm = () => {
         const { firstName, lastName, email, phone, password, confirmPassword } = formData;
@@ -140,14 +142,35 @@ const Register = () => {
   
     return (
       <div className="flex flex-col items-center justify-center h-full w-full p-3">
-        <motion.h1
-          className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Registro de Usuario
-        </motion.h1>
+        <div className="flex items-center justify-center mb-4">
+          <button
+            aria-label="volver"
+            onClick={handleBack}
+            className="p-1 mr-3 rounded-full hover:bg-white/20 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <motion.h1
+            className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Registro de Usuario
+          </motion.h1>
+        </div>
+
+        
+        
   
         <motion.div
           className="w-full max-w-md bg-slate-800/80 backdrop-blur-md rounded-xl p-4 shadow-xl border border-slate-700/50"
@@ -249,6 +272,13 @@ const Register = () => {
             Registrarse
           </Button>
         </motion.div>
+
+        {/* Footer */}
+      <footer className="py-3 border-t border-white/10 text-center">
+        <p className="text-white/50 text-xs">© 2025 Konect4 — UPB.</p>
+        <p className="text-white/50 text-xs">Todos los derechos reservados.</p>
+      </footer>
+
       </div>
     );
   };
