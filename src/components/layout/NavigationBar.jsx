@@ -3,10 +3,7 @@ import { useGameReset } from '../../context/GameContext';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-
 const NavigationButton = ({ onClick, icon, ariaLabel }) => (
-  
-  
   <motion.button
     className="w-12 h-12 flex items-center justify-center text-white/80 hover:text-white transition-all"
     onClick={onClick}
@@ -34,6 +31,11 @@ const NavigationBar = ({ showBackButton, onBackClick, onMenuClick }) => {
   const resetGameAndData = useGameReset();
   const navigate = useNavigate();
 
+  const clearGameStorage = () => {
+    localStorage.removeItem('player2Name');
+    localStorage.removeItem('hasNameBeenSet');
+  };
+
   const handleBackClick = () => {
     Swal.fire({
       title: "¿Estás seguro que deseas salir?",
@@ -47,8 +49,8 @@ const NavigationBar = ({ showBackButton, onBackClick, onMenuClick }) => {
       color: "#fff",
     }).then((result) => {
       if (result.isConfirmed) {
-        
         resetGameAndData();
+        clearGameStorage();
         
         Swal.fire({
           title: "¡Has regresado correctamente!",

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const Help = () => {
   const navigate = useNavigate();
 
-  // Puedes ajustar si quieres que regrese a la pantalla anterior o a /game:
   const handleBack = () => navigate(-1);
 
   return (
