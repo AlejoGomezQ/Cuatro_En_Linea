@@ -60,11 +60,6 @@ const GameScreen = () => {
   // Reset game function
   const handleResetGame = () => {
     resetGame();
-    // Reset player 2 name and hasNameBeenSet flag
-    setPlayer2Name("");
-    localStorage.removeItem('player2Name');
-    setHasNameBeenSet(false);
-    localStorage.removeItem('hasNameBeenSet');
   };
 
   // In the name input modal's button onClick:
