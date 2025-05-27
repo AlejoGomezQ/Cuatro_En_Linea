@@ -1,0 +1,10 @@
+{
+  "appId": "com.juego.cuatroenlinea",
+  "appName": "cuatroenlinea",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
