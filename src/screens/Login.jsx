@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import logoKonect from "/assets/loguito.png";
 
 // Importando módulos de Firebase
 import appFirebase from "../credenciales";
@@ -70,7 +71,7 @@ const Login = () => {
       transition={{ duration: 0.5 }}
     >
       <span className="w-16 h-16 inline-block transform scale-110">
-        <img src="../public/loguito.png" alt="K logo" className="w-full h-full object-contain inline-block" />
+        <img src={logoKonect} alt="K logo" className="w-full h-full object-contain inline-block" />
       </span>
       <span className="-ml-4">onect4</span>
     </motion.h1>
