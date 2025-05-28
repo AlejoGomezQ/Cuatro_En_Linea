@@ -21,7 +21,7 @@ const GameModesScreen = ({ onSelectMode }) => {
     {
       id: 'ai',
       title: 'Desafío IA',
-      description: 'Enfrenta a la inteligencia artificial',
+      description: 'Enfrenta a la inteligencia artificial y desafiate',
       icon: '🤖',
       disabled: false
     },
